@@ -38,9 +38,7 @@ async def bag(request):
                 executor, get_bag, isbn, tuple(params)
             )
         else:
-            data = await asyncio.get_event_loop().run_in_executor(
-                executor, get_bag, isbn
-            )
+            data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
     except Exception as ex:
         logger.error(f"Failed to get the bag for {isbn} - " + str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
@@ -58,9 +56,7 @@ async def meta(request):
                 executor, get_meta, isbn, service
             )
         else:
-            data = await asyncio.get_event_loop().run_in_executor(
-                executor, get_meta, isbn
-            )
+            data = await asyncio.get_event_loop().run_in_executor(executor, get_meta, isbn)
     except Exception as ex:
         logger.error(f"Failed to get metadata for {isbn} - " + str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
@@ -95,9 +91,7 @@ async def mask(request):
 async def description(request):
     isbn = request.match_info.get("isbn", "")
     try:
-        data = await asyncio.get_event_loop().run_in_executor(
-            executor, get_description, isbn
-        )
+        data = await asyncio.get_event_loop().run_in_executor(executor, get_description, isbn)
     except Exception as ex:
         logger.error(f"Failed to get the description for {isbn} - " + str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
@@ -119,9 +113,7 @@ async def cover(request):
 async def editions(request):
     isbn = request.match_info.get("isbn", "")
     try:
-        data = await asyncio.get_event_loop().run_in_executor(
-            executor, get_editions, isbn
-        )
+        data = await asyncio.get_event_loop().run_in_executor(executor, get_editions, isbn)
     except Exception as ex:
         logger.error(f"Failed to get the editions for {isbn} - " + str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")

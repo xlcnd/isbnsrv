@@ -6,16 +6,7 @@ from isbnlib.registry import PROVIDERS
 
 cache = IMCache(maxlen=50)
 
-FIELDS = (
-    "isbn13",
-    "isbn10",
-    "mask",
-    "info",
-    "metadata",
-    "editions",
-    "cover",
-    "description",
-)
+FIELDS = ("isbn13", "isbn10", "mask", "info", "metadata", "editions", "cover", "description")
 
 
 def bag(isbn, fields=FIELDS):
