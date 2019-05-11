@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "isbnsrv"
+version = "0.1.0"
+description = ""
+authors = ["Alexandre Conde <alexandreconde@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+aiohttp = "^3.5"
+cchardet = "^2.1"
+aiodns = "^2.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
