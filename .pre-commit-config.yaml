@@ -1,0 +1,10 @@
+default_language_version:
+    python: python3.6
+
+fail_fast: true
+
+repos:
+-   repo:
+    rev: v0.1.0
+    hooks:
+    -   id: trailing-whitespace

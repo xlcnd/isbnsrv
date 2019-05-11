@@ -16,6 +16,7 @@ isbnlib = "^3.9"
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
 flake8 = "^3.7"
+pre-commit = "^1.16"
 
 [tool.black]
 line-length = 88
