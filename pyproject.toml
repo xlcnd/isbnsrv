@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "isbnlib as a microservice."
 license = "LGPL-3.0"
 authors = ["Alexandre Conde <alexandreconde@hotmail.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.6"
