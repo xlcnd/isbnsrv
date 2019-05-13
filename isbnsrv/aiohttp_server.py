@@ -5,7 +5,6 @@ import concurrent.futures
 import logging
 
 from aiohttp import web
-
 from resources import (
     get_bag,
     get_cover,

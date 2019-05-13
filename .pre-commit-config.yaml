@@ -8,16 +8,20 @@ repos:
   rev: stable
   hooks:
   - id: black
+    name: 'Formatting python code using Black'
     language_version: python3.6
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: 'v4.3.18'
+- repo: https://github.com/pre-commit/pygrep-hooks
+  rev: 'v1.4.0'
   hooks:
-  - id: isort
+  - id: python-no-log-warn
+    name: 'Use logger.warning('
+  - id: python-no-eval
+    name: 'Check for eval()'
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.2.1
   hooks:
   - id: mixed-line-ending
-# - id: trailing-whitespace [--markdown-linebreak-ext=md]
   - id: trailing-whitespace
     exclude: '.*\.md'
   - id: flake8
+    name: 'Lint and check style with Flake8'
