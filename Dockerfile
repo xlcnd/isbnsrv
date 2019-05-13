@@ -6,7 +6,8 @@ RUN apk add --update --no-cache \
     && rm -rf /var/cache/apk/*
 WORKDIR /isbnsrv
 COPY isbnsrv /isbnsrv
-COPY requirements.txt /isbnsrv
+COPY *.txt /isbnsrv
+COPY LICENSE /isbnsrv
 RUN pip install --no-cache-dir -r requirements.txt
 RUN apk del \
     g++ \
