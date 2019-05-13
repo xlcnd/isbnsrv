@@ -35,7 +35,7 @@ http://localhost:8080/api/v1/isbns/9780375869020/editions
 http://localhost:8080/api/v1/providers
 ```
 
-**These are the main endpoints of the API**
+**These are the main endpoints of the API**.
 
 
 There his a **'bag' mode** too (some examples):
