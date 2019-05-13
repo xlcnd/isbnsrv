@@ -4,8 +4,8 @@
 
 This is **pre-ALPHA** software!
 
-   **Please** don't expose this service to the public web,
-   use it only as a microservice inside your app.
+>**Please** don't expose this service to the public web,
+>use it only as a microservice inside your app.
 
 
 To try it, you need to install Docker in your system and clone this repository.
