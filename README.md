@@ -7,8 +7,6 @@ This is **pre-ALPHA** software!
    **Please** don't expose this service to the public web,
    use it only as a microservice inside your app.
 
-It exposes port 8080.
-
 
 To try it, you need to install Docker in your system and clone this repository.
 Then enter in a terminal (inside directory `isbnsrv-master`):
@@ -17,6 +15,9 @@ Then enter in a terminal (inside directory `isbnsrv-master`):
 $ docker build --tag="isbnsrv:0.0.1" .
 $ docker run -d -p 8080:8080 isbnsrv:0.0.1
 ```
+
+(it exposes port 8080).
+
 
 Now in your browser go to:
 
@@ -46,7 +47,7 @@ http://localhost:8080/api/v1/isbns/9780375869020?fields=isbn13,isbn10,mask,metad
 ```
 
 If you don't indicate any field (like in the first example above) all fields are
-considered and the response is very slow. You should be very specific and 
+considered and the response is very slow. You should be very specific and
 **choose the fields that you need**.
 
 Bags are slow with fields `editions`, `cover`, `metadata` or `description` and fast with fields
