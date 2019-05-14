@@ -45,3 +45,4 @@ env
 DOCKER*
 poetry.lock
 .venv/
+.pre-commit-config.yaml
