@@ -1,8 +1,8 @@
 """Resources manager for 'isbnsrv'."""
 
 import isbnlib
-from isbnlib._imcache import IMCache
 from isbnlib.registry import PROVIDERS
+from isbnlib._imcache import IMCache
 
 cache = IMCache(maxlen=50)
 
