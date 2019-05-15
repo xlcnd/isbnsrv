@@ -52,7 +52,7 @@ def bag(isbn, fields=FIELDS):
 def get_bag(isbn, fields=FIELDS):
     """Get big bag of data."""
     key = isbn + "".join(sorted(fields)) if fields != FIELDS else isbn
-    if not cache.get(key):
+    if key not in cache:
         cache[key] = bag(isbn, fields)
     return cache[key]
 
