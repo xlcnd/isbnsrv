@@ -1,10 +1,7 @@
 """Read and write to a dict-like cache."""
 
 
-from collections import MutableMapping
-
-
-class MemoryCache(MutableMapping):
+class MemoryCache:
     """Read and write to a dict-like cache."""
 
     MAXLEN = 1000
@@ -32,11 +29,11 @@ class MemoryCache(MutableMapping):
         if v:
             self.d[k] = v
 
-    async def get(self, k):
+    async def get(self, k, default=None):
         try:
             return self.d[k]
         except KeyError:
-            return None
+            return default
 
     async def get_key(self, request):
         key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
