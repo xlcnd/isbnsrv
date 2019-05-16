@@ -144,7 +144,6 @@ async def if_isbn_validate(request, handler):
 async def cache_middleware(request, handler):
     key = await cache.get_key(request)
     if await cache.has(key):
-        print(key)
         data = await cache.get(key)
         return web.json_response(**data)
     try:
