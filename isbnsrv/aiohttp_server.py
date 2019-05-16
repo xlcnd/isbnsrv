@@ -5,6 +5,9 @@ import concurrent.futures
 import logging
 
 from aiohttp import web
+
+from async_imcache import MemoryCache
+
 from resources import (
     get_bag,
     get_cover,
@@ -25,6 +28,8 @@ executor = concurrent.futures.ThreadPoolExecutor()  # max_workers=(5 x #cores)
 logger = logging.getLogger("isbnsrv")
 
 logging.basicConfig(level=logging.ERROR)
+
+cache = MemoryCache()
 
 
 async def bag(request):
@@ -136,6 +141,27 @@ async def if_isbn_validate(request, handler):
 
 
 @web.middleware
+async def cache_middleware(request, handler):
+    key = await cache.get_key(request)
+    if await cache.has(key):
+        print(key)
+        data = await cache.get(key)
+        return web.json_response(**data)
+    try:
+        original_response = await handler(request)
+        headers = dict(original_response.headers)
+        del headers["Content-Type"]
+        data = dict(
+            status=original_response.status, headers=headers, body=original_response.body
+        )
+        await cache.set(key, data)
+        return original_response
+    except:
+        data = {"ERROR": {"code": 500, "reason": "Internal server error."}}
+        return web.json_response(data, status=500, headers=SERVER)
+
+
+@web.middleware
 async def error_middleware(request, handler):
     try:
         response = await handler(request)
@@ -150,7 +176,7 @@ async def error_middleware(request, handler):
     return web.json_response(data, status=status, headers=SERVER)
 
 
-app = web.Application(middlewares=[if_isbn_validate, error_middleware])
+app = web.Application(middlewares=[cache_middleware, if_isbn_validate, error_middleware])
 app.add_routes(
     [
         web.get("/api/v1/isbns/{isbn}", bag),

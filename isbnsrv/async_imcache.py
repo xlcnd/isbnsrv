@@ -4,7 +4,7 @@
 from collections import MutableMapping
 
 
-class IMCache(MutableMapping):
+class MemoryCache(MutableMapping):
     """Read and write to a dict-like cache."""
 
     MAXLEN = 1000
@@ -15,7 +15,7 @@ class IMCache(MutableMapping):
         self.maxlen = maxlen
         self.d = dict(*a, **k)
         while len(self.d) > maxlen:  # pragma: no cache
-            self.popitem()
+            self.d.popitem()
 
     async def __iter__(self):
         return iter(self.d)
@@ -24,14 +24,18 @@ class IMCache(MutableMapping):
         return len(self.d)
 
     async def __getitem__(self, k):
-        return self.d[k]
+        try:
+            return self.d[k]
+        except KeyError:
+            return None
 
     async def __setitem__(self, k, v):
         if k not in self.d and len(self.d) == self.maxlen:
-            self.popitem()
-        self.d[k] = v
+            self.d.popitem()
+        if v:
+            self.d[k] = v
 
-    async def __contains__(self, key):
+    async def has(self, key):
         return key in self.d
 
     async def __delitem__(self, k):
@@ -43,15 +47,15 @@ class IMCache(MutableMapping):
     async def __call__(self, k):
         """Implement function call operator."""
         try:
-            return self.__getitem__(k)
+            return await self.__getitem__(k)
         except KeyError:
             return None
 
     async def set(self, k, v):
-        return self.__setitem__(k, v)
+        return await self.__setitem__(k, v)
 
     async def get(self, k):
-        return self.__getitem__(k)
+        return await self.__getitem__(k)
 
     async def get_key(self, request):
         key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
@@ -61,5 +65,4 @@ class IMCache(MutableMapping):
             postdata="".join(await request.post()),
             ctype=request.content_type,
         )
-
         return key
