@@ -53,6 +53,7 @@ async def meta(request):
     isbn = request.match_info.get("isbn", "")
     service = request.match_info.get("provider", "")
     if service and service not in get_providers():
+        logger.error(f"Provider '{service}' not available!")
         raise web.HTTPNotFound(reason=f"Provider '{service}' not available!")
     try:
         if service:
@@ -134,9 +135,8 @@ async def if_isbn_validate(request, handler):
     isbn = request.match_info.get("isbn", "")
     if isbn:
         if not get_isbn13(isbn):
-            #  raise web.HTTPNotFound(reason=f"{isbn} is NOT a valid ISBN!")
-            data = {"ERROR": {"code": 404, "reason": f"{isbn} is not a valid ISBN!"}}
-            return web.json_response(data, status=404, headers=SERVER)
+            logger.error(f"{isbn} is not a valid ISBN!")
+            raise web.HTTPNotFound(reason=f"{isbn} is NOT a valid ISBN!")
     return await handler(request)
 
 
@@ -146,8 +146,8 @@ async def cache_middleware(request, handler):
     if await cache.has(key):
         data = await cache.get(key)
         return web.json_response(**data)
+    original_response = await handler(request)
     try:
-        original_response = await handler(request)
         headers = dict(original_response.headers)
         del headers["Content-Type"]
         data = dict(
@@ -157,8 +157,7 @@ async def cache_middleware(request, handler):
         return original_response
     except Exception as ex:
         logger.error("Error in async cache - %s", str(ex))
-        data = {"ERROR": {"code": 500, "reason": "Internal server error."}}
-        return web.json_response(data, status=500, headers=SERVER)
+        raise web.HTTPInternalServerError(reason=f"Internal server error!")
 
 
 @web.middleware
@@ -177,7 +176,7 @@ async def error_middleware(request, handler):
     return web.json_response(data, status=status, headers=SERVER)
 
 
-app = web.Application(middlewares=[cache_middleware, if_isbn_validate, error_middleware])
+app = web.Application(middlewares=[error_middleware, cache_middleware, if_isbn_validate])
 app.add_routes(
     [
         web.get("/api/v1/isbns/{isbn}", bag),
