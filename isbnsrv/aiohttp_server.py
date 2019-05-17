@@ -44,7 +44,7 @@ async def bag(request):
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
     except Exception as ex:
-        logger.error(f"Failed to get the bag for {isbn} - " + str(ex))
+        logger.error("Failed to get the bag for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     return web.json_response(data, headers=SERVER)
 
@@ -62,7 +62,7 @@ async def meta(request):
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_meta, isbn)
     except Exception as ex:
-        logger.error(f"Failed to get metadata for {isbn} - " + str(ex))
+        logger.error("Failed to get metadata for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"metadata": data}
     return web.json_response(data, headers=SERVER)
@@ -97,7 +97,7 @@ async def description(request):
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_description, isbn)
     except Exception as ex:
-        logger.error(f"Failed to get the description for {isbn} - " + str(ex))
+        logger.error("Failed to get the description for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"description": data}
     return web.json_response(data, headers=SERVER)
@@ -108,7 +108,7 @@ async def cover(request):
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_cover, isbn)
     except Exception as ex:
-        logger.error(f"Failed to get the cover for {isbn} - " + str(ex))
+        logger.error("Failed to get the cover for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"cover": data}
     return web.json_response(data, headers=SERVER)
@@ -119,7 +119,7 @@ async def editions(request):
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_editions, isbn)
     except Exception as ex:
-        logger.error(f"Failed to get the editions for {isbn} - " + str(ex))
+        logger.error("Failed to get the editions for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"editions": data}
     return web.json_response(data, headers=SERVER)
@@ -155,7 +155,8 @@ async def cache_middleware(request, handler):
         )
         await cache.set(key, data)
         return original_response
-    except:
+    except Exception as ex:
+        logger.error("Error in async cache - %s", str(ex))
         data = {"ERROR": {"code": 500, "reason": "Internal server error."}}
         return web.json_response(data, status=500, headers=SERVER)
 
@@ -171,6 +172,7 @@ async def error_middleware(request, handler):
     except web.HTTPException as ex:
         status = ex.status
         message = ex.reason
+        logger.debug("HTTPException in error_middleware - %s", str(ex))
     data = {"ERROR": {"code": status, "reason": message}}
     return web.json_response(data, status=status, headers=SERVER)
 
