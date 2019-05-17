@@ -4,7 +4,7 @@ import isbnlib
 from isbnlib.registry import PROVIDERS
 from isbnlib._imcache import IMCache
 
-cache = IMCache(maxlen=50)
+cache = IMCache(maxlen=1000)
 
 FIELDS = ("isbn13", "isbn10", "mask", "info", "metadata", "editions", "cover", "description")
 
