@@ -172,7 +172,7 @@ async def error_middleware(request, handler):
     except web.HTTPException as ex:
         status = ex.status
         message = ex.reason
-        logger.debug("HTTPException in error_middleware - %s", str(ex))
+        logger.debug("HTTPException in error_middleware - %s", message)
     data = {"ERROR": {"code": status, "reason": message}}
     return web.json_response(data, status=status, headers=SERVER)
 
