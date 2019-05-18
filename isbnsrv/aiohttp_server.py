@@ -53,7 +53,7 @@ async def meta(request):
     isbn = request.match_info.get("isbn", "")
     service = request.match_info.get("provider", "")
     if service and service not in get_providers():
-        logger.error(f"Provider '{service}' not available!")
+        logger.error("Provider '%s' not available!", service)
         raise web.HTTPNotFound(reason=f"Provider '{service}' not available!")
     try:
         if service:
@@ -135,7 +135,7 @@ async def if_isbn_validate(request, handler):
     isbn = request.match_info.get("isbn", "")
     if isbn:
         if not get_isbn13(isbn):
-            logger.error(f"{isbn} is not a valid ISBN!")
+            logger.error("%s is not a valid ISBN!", isbn)
             raise web.HTTPNotFound(reason=f"{isbn} is NOT a valid ISBN!")
     return await handler(request)
 
