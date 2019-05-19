@@ -37,9 +37,9 @@ async def bag(request):
     params = request.rel_url.query.get("fields", "")
     try:
         if params:
-            params = params.split(",")
+            params = tuple(params.split(","))
             data = await asyncio.get_event_loop().run_in_executor(
-                executor, get_bag, isbn, tuple(params)
+                executor, get_bag, isbn, params
             )
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
