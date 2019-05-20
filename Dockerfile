@@ -5,7 +5,7 @@ RUN apk add --update --no-cache \
     libffi-dev \
     && rm -rf /var/cache/apk/*
 WORKDIR /isbnsrv
-COPY isbnsrv /isbnsrv
+COPY isbnsrv /isbnsrv/isbnsrv
 COPY *.txt /isbnsrv/
 COPY LICENSE /isbnsrv/
 RUN pip install --no-cache-dir -r requirements.txt
@@ -15,4 +15,4 @@ RUN apk del \
     libffi-dev
 ENV SERVICE_NAME "isbnsrv"
 EXPOSE 8080
-ENTRYPOINT ["python3", "/isbnsrv/server.py"]
+ENTRYPOINT ["python3", "-c", "from isbnsrv.server import run; run()"]

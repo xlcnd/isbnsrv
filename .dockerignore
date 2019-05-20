@@ -3,3 +3,4 @@
 **/.vscode/**
 .venv/**
 LAB/**
+**/__pycache__/**
