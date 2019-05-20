@@ -15,4 +15,4 @@ RUN apk del \
     libffi-dev
 ENV SERVICE_NAME "isbnsrv"
 EXPOSE 8080
-ENTRYPOINT ["python3", "/isbnsrv/aiohttp_server.py"]
+ENTRYPOINT ["python3", "/isbnsrv/server.py"]

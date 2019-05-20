@@ -6,7 +6,7 @@ import logging
 
 from aiohttp import web
 
-from async_imcache import MemoryCache
+from cache import MemoryCache
 
 from resources import (
     get_bag,
@@ -193,4 +193,10 @@ app.add_routes(
     ]
 )
 
-web.run_app(app, access_log=None)
+
+def run():
+    web.run_app(app, access_log=None)
+
+
+if __name__ == "__main__":
+    run()
