@@ -176,23 +176,26 @@ async def error_middleware(request, handler):
     return web.json_response(data, status=status, headers=SERVER)
 
 
-app = web.Application(middlewares=[error_middleware, cache_middleware, if_isbn_validate])
-app.add_routes(
-    [
-        web.get("/api/v1/isbns/{isbn}", bag),
-        web.get("/api/v1/isbns/{isbn}/metadata", meta),
-        web.get("/api/v1/isbns/{isbn}/metadata/{provider}", meta),
-        web.get("/api/v1/isbns/{isbn}/isbn10", isbn10),
-        web.get("/api/v1/isbns/{isbn}/isbn13", isbn13),
-        web.get("/api/v1/isbns/{isbn}/info", info),
-        web.get("/api/v1/isbns/{isbn}/mask", mask),
-        web.get("/api/v1/isbns/{isbn}/description", description),
-        web.get("/api/v1/isbns/{isbn}/cover", cover),
-        web.get("/api/v1/isbns/{isbn}/editions", editions),
-        web.get("/api/v1/providers", providers),
-    ]
-)
+async def make_app():
+    app = web.Application(middlewares=[error_middleware, cache_middleware, if_isbn_validate])
+    app.add_routes(
+        [
+            web.get("/api/v1/isbns/{isbn}", bag),
+            web.get("/api/v1/isbns/{isbn}/metadata", meta),
+            web.get("/api/v1/isbns/{isbn}/metadata/{provider}", meta),
+            web.get("/api/v1/isbns/{isbn}/isbn10", isbn10),
+            web.get("/api/v1/isbns/{isbn}/isbn13", isbn13),
+            web.get("/api/v1/isbns/{isbn}/info", info),
+            web.get("/api/v1/isbns/{isbn}/mask", mask),
+            web.get("/api/v1/isbns/{isbn}/description", description),
+            web.get("/api/v1/isbns/{isbn}/cover", cover),
+            web.get("/api/v1/isbns/{isbn}/editions", editions),
+            web.get("/api/v1/providers", providers),
+        ]
+    )
+    return app
 
 
 def run():
+    app = make_app()
     web.run_app(app, access_log=None)
