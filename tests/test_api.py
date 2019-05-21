@@ -1,10 +1,7 @@
-# import pytest
 from isbnsrv.server import make_app
 
-# FIXME
 
-
-# all requests on same loop
+# all requests on same (app) instance
 async def test_api(aiohttp_client):
     app = await make_app()
     client = await aiohttp_client(app)
@@ -89,11 +86,8 @@ async def test_api(aiohttp_client):
     text = await resp.text()
     assert "ERROR" in text
 
-    # await client.close()
-    # await app.shutdown()
 
-
-# request on different loop
+# request on different (app) instance
 async def test_isbn10(aiohttp_client):
     app = await make_app()
     client = await aiohttp_client(app)
@@ -103,11 +97,8 @@ async def test_isbn10(aiohttp_client):
     text = await resp.text()
     assert '{"isbn10": "0140440399"}' == text
 
-    # await client.close()
-    # await app.shutdown()
 
-
-# request on different loop
+# request on different (app) instance
 async def test_isbn13(aiohttp_client):
     app = await make_app()
     client = await aiohttp_client(app)
@@ -116,6 +107,3 @@ async def test_isbn13(aiohttp_client):
     assert resp.status == 200
     text = await resp.text()
     assert '{"isbn13": "9780140440393"}' == text
-
-    # await client.close()
-    # await app.shutdown()
