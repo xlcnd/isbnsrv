@@ -21,6 +21,7 @@ flake8 = "^3.7"
 pre-commit = "^1.16"
 radon = "^3.0"
 invoke = "^1.2"
+pytest-aiohttp = "^0.3.0"
 
 [tool.black]
 line-length = 95
