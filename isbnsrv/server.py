@@ -30,7 +30,7 @@ executor = concurrent.futures.ThreadPoolExecutor()  # max_workers=(5 x #cores)
 
 logger = logging.getLogger("isbnsrv")
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.DEBUG)
 
 cache = MemoryCache()
 
