@@ -1,6 +1,5 @@
 aiohttp==3.5.4
 aiodns==2.0.0
-aiologger==0.3.0
 cchardet==2.1.4
 isbnlib==3.9.8
 isbnlib-porbase==0.1.2
