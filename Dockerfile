@@ -14,5 +14,6 @@ RUN apk del \
     gcc \
     libffi-dev
 ENV SERVICE_NAME "isbnsrv"
+ENV PORT 8080
 EXPOSE 8080
 ENTRYPOINT ["python3", "-c", "from isbnsrv.server import run; run()"]

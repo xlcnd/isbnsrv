@@ -3,6 +3,7 @@
 import asyncio
 import concurrent.futures
 import logging
+import os
 import traceback
 import sys
 
@@ -206,4 +207,7 @@ async def make_app():
 
 def run():
     app = make_app()
-    web.run_app(app, access_log=None)
+    port = os.environ.get("PORT")
+    if port is not None:
+        port = int(port)
+    web.run_app(app, port=port, access_log=None)
