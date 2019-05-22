@@ -47,7 +47,7 @@ async def bag(request):
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
     except Exception as ex:
-        traceback.print_exc(file=sys.stderr)
+        # traceback.print_exc(file=sys.stderr)
         logger.error("Failed to get the bag for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     return web.json_response(data, headers=SERVER)
@@ -67,7 +67,7 @@ async def meta(request):
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_meta, isbn)
     except Exception as ex:
-        traceback.print_exc(file=sys.stderr)
+        # traceback.print_exc(file=sys.stderr)
         logger.error("Failed to get metadata for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"metadata": data}
@@ -114,7 +114,7 @@ async def cover(request):
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_cover, isbn)
     except Exception as ex:
-        traceback.print_exc(file=sys.stderr)
+        # traceback.print_exc(file=sys.stderr)
         logger.error("Failed to get the cover for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"cover": data}
@@ -126,7 +126,7 @@ async def editions(request):
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_editions, isbn)
     except Exception as ex:
-        traceback.print_exc(file=sys.stderr)
+        # traceback.print_exc(file=sys.stderr)
         logger.error("Failed to get the editions for %s - %s", isbn, str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"editions": data}
@@ -163,7 +163,7 @@ async def cache_middleware(request, handler):
         await cache.set(key, data)
         return original_response
     except Exception as ex:
-        traceback.print_exc(file=sys.stderr)
+        # traceback.print_exc(file=sys.stderr)
         logger.error("Error in async cache - %s", str(ex))
         raise web.HTTPInternalServerError(reason=f"Internal server error!")
 
@@ -176,11 +176,12 @@ async def error_middleware(request, handler):
             return response
         status = response.status
         message = getattr(response, "message", "")
+        logger.error("(%s) error %s", status, message)
     except web.HTTPException as ex:
         status = ex.status
         message = ex.reason
         traceback.print_exc(file=sys.stderr)
-        logger.debug("HTTPException in error_middleware - %s", message)
+        logger.debug("(%s) HTTPException in error_middleware - %s", status, message)
     data = {"ERROR": {"code": status, "reason": message}}
     return web.json_response(data, status=status, headers=SERVER)
 
