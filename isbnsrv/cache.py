@@ -34,13 +34,3 @@ class MemoryCache:
 
     async def len(self):
         return len(self.d)
-
-    async def get_key(self, request):
-        key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
-            method=request.method,
-            path=request.rel_url.path_qs,
-            host=request.url.host,
-            postdata="".join(await request.post()),
-            ctype=request.content_type,
-        )
-        return key

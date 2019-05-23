@@ -35,6 +35,17 @@ logging.basicConfig(level=logging.DEBUG)
 cache = MemoryCache()
 
 
+async def make_key(request):
+    key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
+        method=request.method,
+        path=request.rel_url.path_qs,
+        host=request.url.host,
+        postdata="".join(await request.post()),
+        ctype=request.content_type,
+    )
+    return key
+
+
 async def bag(request):
     isbn = request.match_info.get("isbn", "")
     params = request.rel_url.query.get("fields", "")
@@ -150,7 +161,7 @@ async def if_isbn_validate(request, handler):
 
 @web.middleware
 async def cache_middleware(request, handler):
-    key = await cache.get_key(request)
+    key = await make_key(request)
     if await cache.has(key):
         data = await cache.get(key)
         return web.json_response(**data)
