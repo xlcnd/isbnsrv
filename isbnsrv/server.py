@@ -59,7 +59,7 @@ async def bag(request):
             data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
     except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the bag for %s - %s", isbn, str(exc))
+        logger.error("Failed to get the bag for %s - %r", isbn, exc)
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     return web.json_response(data, headers=SERVER)
 
@@ -79,7 +79,7 @@ async def meta(request):
             data = await asyncio.get_event_loop().run_in_executor(executor, get_meta, isbn)
     except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get metadata for %s - %s", isbn, str(exc))
+        logger.error("Failed to get metadata for %s - %r", isbn, exc)
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"metadata": data}
     return web.json_response(data, headers=SERVER)
@@ -115,7 +115,7 @@ async def description(request):
         data = await asyncio.get_event_loop().run_in_executor(executor, get_description, isbn)
     except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the description for %s - %s", isbn, str(exc))
+        logger.error("Failed to get the description for %s - %r", isbn, exc)
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"description": data}
     return web.json_response(data, headers=SERVER)
@@ -127,7 +127,7 @@ async def cover(request):
         data = await asyncio.get_event_loop().run_in_executor(executor, get_cover, isbn)
     except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the cover for %s - %s", isbn, str(exc))
+        logger.error("Failed to get the cover for %s - %r", isbn, exc)
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"cover": data}
     return web.json_response(data, headers=SERVER)
@@ -137,9 +137,9 @@ async def editions(request):
     isbn = request.match_info.get("isbn", "")
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_editions, isbn)
-    except Exception as ex:
+    except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the editions for %s - %s", isbn, str(ex))
+        logger.error("Failed to get the editions for %s - %r", isbn, exc)
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"editions": data}
     return web.json_response(data, headers=SERVER)
@@ -176,7 +176,7 @@ async def cache_middleware(request, handler):
         return original_response
     except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Error in async cache - %s", str(exc))
+        logger.error("Error in async cache - %r", exc)
         raise web.HTTPInternalServerError(reason=f"Internal server error!")
 
 
