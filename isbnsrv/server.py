@@ -30,7 +30,7 @@ executor = concurrent.futures.ThreadPoolExecutor()  # max_workers=(5 x #cores)
 
 logger = logging.getLogger("isbnsrv")
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.ERROR)
 
 cache = MemoryCache()
 
@@ -57,9 +57,9 @@ async def bag(request):
             )
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
-    except Exception as ex:
+    except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the bag for %s - %s", isbn, str(ex))
+        logger.error("Failed to get the bag for %s - %s", isbn, str(exc))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     return web.json_response(data, headers=SERVER)
 
@@ -77,9 +77,9 @@ async def meta(request):
             )
         else:
             data = await asyncio.get_event_loop().run_in_executor(executor, get_meta, isbn)
-    except Exception as ex:
+    except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get metadata for %s - %s", isbn, str(ex))
+        logger.error("Failed to get metadata for %s - %s", isbn, str(exc))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"metadata": data}
     return web.json_response(data, headers=SERVER)
@@ -113,9 +113,9 @@ async def description(request):
     isbn = request.match_info.get("isbn", "")
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_description, isbn)
-    except Exception as ex:
+    except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the description for %s - %s", isbn, str(ex))
+        logger.error("Failed to get the description for %s - %s", isbn, str(exc))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"description": data}
     return web.json_response(data, headers=SERVER)
@@ -125,9 +125,9 @@ async def cover(request):
     isbn = request.match_info.get("isbn", "")
     try:
         data = await asyncio.get_event_loop().run_in_executor(executor, get_cover, isbn)
-    except Exception as ex:
+    except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Failed to get the cover for %s - %s", isbn, str(ex))
+        logger.error("Failed to get the cover for %s - %s", isbn, str(exc))
         raise web.HTTPInternalServerError(reason=f"Internal server error for {isbn}!")
     data = {"cover": data}
     return web.json_response(data, headers=SERVER)
@@ -174,9 +174,9 @@ async def cache_middleware(request, handler):
         )
         await cache.set(key, data)
         return original_response
-    except Exception as ex:
+    except Exception as exc:
         traceback.print_exc(file=sys.stderr)
-        logger.error("Error in async cache - %s", str(ex))
+        logger.error("Error in async cache - %s", str(exc))
         raise web.HTTPInternalServerError(reason=f"Internal server error!")
 
 
@@ -190,9 +190,9 @@ async def error_middleware(request, handler):
         message = getattr(response, "message", "")
         traceback.print_exc(file=sys.stderr)
         logger.error("(%s) error %s", status, message)
-    except web.HTTPException as ex:
-        status = ex.status
-        message = ex.reason
+    except web.HTTPException as exc:
+        status = exc.status
+        message = exc.reason
         if status == 404:
             traceback.print_exc(file=sys.stderr)
         logger.debug("(%s) HTTPException in error_middleware - %s", status, message)
@@ -222,7 +222,7 @@ async def make_app():
 
 def run():
     app = make_app()
-    port = os.environ.get("PORT")
+    port = os.environ.get("PORT", 8080)
     if port is not None:
         port = int(port)
     web.run_app(app, port=port, access_log=None)
