@@ -6,11 +6,10 @@ class MemoryCache:
 
     MAXLEN = 1000
 
-    # pylint: disable=keyword-arg-before-vararg
-    def __init__(self, maxlen=MAXLEN, *a, **k):
+    def __init__(self, maxlen=MAXLEN):
         self.filepath = "IN MEMORY"
         self.maxlen = maxlen
-        self.d = dict(*a, **k)
+        self.d = {}
         while len(self.d) > maxlen:  # pragma: no cache
             self.d.popitem()
 
