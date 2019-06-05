@@ -54,7 +54,7 @@ async def test_api(aiohttp_client):
     resp = await client.get("/api/v1/isbns/9780140440393?fields=description")
     assert resp.status == 200
     text = await resp.text()
-    assert "four hundred years before the birth of Christ" in text
+    assert "Sparta" in text
 
     resp = await client.get("/api/v1/isbns/9780140440393/cover")
     assert resp.status == 200
