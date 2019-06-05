@@ -157,7 +157,7 @@ async def healthcheck(request):
 
 
 @web.middleware
-async def if_isbn_validate(request, handler):
+async def validate_isbn_middleware(request, handler):
     isbn = request.match_info.get("isbn", "")
     if isbn:
         if not get_isbn13(isbn):
@@ -209,7 +209,9 @@ async def error_middleware(request, handler):
 
 
 async def make_app():
-    app = web.Application(middlewares=[error_middleware, cache_middleware, if_isbn_validate])
+    app = web.Application(
+        middlewares=[error_middleware, cache_middleware, validate_isbn_middleware]
+    )
     app.add_routes(
         [
             web.get("/api/v1/isbns/{isbn}", bag),
@@ -231,7 +233,5 @@ async def make_app():
 
 def run():
     app = make_app()
-    port = os.environ.get("PORT", 8080)
-    if port is not None:
-        port = int(port)
+    port = int(os.environ.get("PORT", 8080))
     web.run_app(app, port=port, access_log=None)
