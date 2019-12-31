@@ -1,6 +1,6 @@
-aiohttp==3.5.4
+aiohttp==3.6.2
 aiodns==2.0.0
-cchardet==2.1.4
-isbnlib==3.9.8
+cchardet==2.1.5
+isbnlib==3.9.10
 isbnlib-porbase==0.1.2
 isbnlib-bnf==0.0.2
