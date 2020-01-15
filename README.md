@@ -2,7 +2,8 @@
 ===========================
 
 
-This is **ALPHA** software!
+WARNING:
+-------
 
 >**Please** don't expose this service to the public web,
 >use it only as a microservice inside your app.
