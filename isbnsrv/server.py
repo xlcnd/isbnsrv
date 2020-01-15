@@ -7,6 +7,8 @@ import os
 
 from aiohttp import web
 
+from . import __version__
+
 from .cache import MemoryCache
 
 from .resources import (
@@ -22,7 +24,7 @@ from .resources import (
     get_providers,
 )
 
-SERVER = {"Server": "isbnsrv/0.0.1"}
+SERVER = {"Server": f"isbnsrv/{__version__}"}
 
 executor = concurrent.futures.ThreadPoolExecutor()  # max_workers=(5 x #cores)
 
