@@ -156,6 +156,10 @@ async def healthcheck(request):
     return web.json_response({"isbnsrv": "OK"}, status=200, headers=SERVER)
 
 
+async def version(request):
+    return web.json_response({"version": SERVER["Server"]}, status=200, headers=SERVER)
+
+
 @web.middleware
 async def validate_isbn_middleware(request, handler):
     isbn = request.match_info.get("isbn", "")
@@ -225,6 +229,7 @@ async def make_app():
             web.get("/api/v1/isbns/{isbn}/cover", cover),
             web.get("/api/v1/isbns/{isbn}/editions", editions),
             web.get("/api/v1/providers", providers),
+            web.get("/api/v1/version", version),
             web.get("/api/v1/7E2", healthcheck),
         ]
     )

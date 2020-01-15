@@ -34,6 +34,7 @@ http://localhost:8080/api/v1/isbns/9780375869020/description
 http://localhost:8080/api/v1/isbns/9780375869020/cover
 http://localhost:8080/api/v1/isbns/9780375869020/editions
 http://localhost:8080/api/v1/providers
+http://localhost:8080/api/v1/version
 ```
 
 **These are the main endpoints of the API**.
