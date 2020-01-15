@@ -26,55 +26,65 @@ async def test_api(aiohttp_client):
     text = await resp.text()
     assert '{"info": "English language"}' == text
 
-    resp = await client.get("/api/v1/isbns/9780140440393/metadata")
+    resp = await client.get("/api/v1/isbns/978-0192821911/metadata")
     assert resp.status == 200
     text = await resp.text()
-    assert "History Of The Peloponnesian War" in text
+    assert "Peloponnesian War" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393?fields=metadata")
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=metadata")
     assert resp.status == 200
     text = await resp.text()
-    assert "History Of The Peloponnesian War" in text
+    assert "Peloponnesian War" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393/metadata/goob")
+    resp = await client.get("/api/v1/isbns/9780192821911/metadata/openl")
+    assert resp.status == 200
+    text = await resp.text()
+    assert "Peloponnesian War" in text
+
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=metadata,openl")
+    assert resp.status == 200
+    text = await resp.text()
+    assert "Peloponnesian War" in text
+
+    resp = await client.get("/api/v1/isbns/9780192821911/metadata/goob")
     assert resp.status == 200
     text = await resp.text()
     assert "Thucydides" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393?fields=metadata,goob")
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=metadata,goob")
     assert resp.status == 200
     text = await resp.text()
-    assert "History Of The Peloponnesian War" in text
+    assert "Peloponnesian War" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393/description")
+    resp = await client.get("/api/v1/isbns/9780192821911/description")
     assert resp.status == 200
     text = await resp.text()
-    assert "Athens" in text
+    assert "Peloponnesian" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393?fields=description")
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=description")
     assert resp.status == 200
     text = await resp.text()
-    assert "Sparta" in text
+    assert "Peloponnesian" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393/cover")
+    resp = await client.get("/api/v1/isbns/9780192821911/cover")
     assert resp.status == 200
     text = await resp.text()
-    assert "id=RQo1YIvlwRAC" in text
+    assert "id=CSZFAQAAIAAJ" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393?fields=cover")
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=cover")
     assert resp.status == 200
     text = await resp.text()
-    assert "id=RQo1YIvlwRAC" in text
+    assert "id=CSZFAQAAIAAJ" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393/editions")
+    resp = await client.get("/api/v1/isbns/9780192821911/editions")
     assert resp.status == 200
     text = await resp.text()
-    assert "9780140440393" in text
+    assert "9780192821911" in text
 
-    resp = await client.get("/api/v1/isbns/9780140440393?fields=editions")
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=editions")
     assert resp.status == 200
     text = await resp.text()
-    assert "9780140440393" in text
+    assert "9780192821911" in text
 
     resp = await client.get("/api/v1/isbns/9780140440393")
     assert resp.status == 200
