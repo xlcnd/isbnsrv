@@ -91,6 +91,11 @@ async def test_api(aiohttp_client):
     text = await resp.text()
     assert "9780140440393" in text
 
+    resp = await client.get("/api/v1/version")
+    assert resp.status == 200
+    text = await resp.text()
+    assert '{"version": "isbnsrv/0.0.1"}' == text
+
     resp = await client.get("/api/v1/isbns/978014044039")
     assert resp.status == 404
     text = await resp.text()
