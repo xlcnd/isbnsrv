@@ -2,7 +2,7 @@
 ===========================
 
 
-WARNING:
+Warning
 -------
 
 >**Please** don't expose this service to the public web,
