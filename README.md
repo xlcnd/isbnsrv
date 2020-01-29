@@ -13,8 +13,8 @@ To try it, you need to install Docker in your system and clone this repository.
 Then enter in a terminal (inside directory `isbnsrv-master`):
 
 ```
-$ docker build --tag="isbnsrv:0.0.1" .
-$ docker run -d -p 8080:8080 isbnsrv:0.0.1
+$ docker build --tag="isbnsrv:1.1.0" .
+$ docker run -d -p 8080:8080 isbnsrv:1.1.0
 ```
 
 (it exposes port 8080).
