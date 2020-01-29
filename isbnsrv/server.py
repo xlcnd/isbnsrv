@@ -7,7 +7,7 @@ import os
 
 from aiohttp import web
 
-from . import __version__
+from . import __api__, __version__
 
 from .cache import MemoryCache
 
@@ -33,6 +33,8 @@ logger = logging.getLogger("isbnsrv")
 logging.basicConfig(level=logging.INFO)
 
 cache = MemoryCache()
+
+api_id = "/api/v" + __api__ + "/"
 
 
 async def make_key(request):
@@ -220,19 +222,19 @@ async def make_app():
     )
     app.add_routes(
         [
-            web.get("/api/v1/isbns/{isbn}", bag),
-            web.get("/api/v1/isbns/{isbn}/metadata", meta),
-            web.get("/api/v1/isbns/{isbn}/metadata/{provider}", meta),
-            web.get("/api/v1/isbns/{isbn}/isbn10", isbn10),
-            web.get("/api/v1/isbns/{isbn}/isbn13", isbn13),
-            web.get("/api/v1/isbns/{isbn}/info", info),
-            web.get("/api/v1/isbns/{isbn}/mask", mask),
-            web.get("/api/v1/isbns/{isbn}/description", description),
-            web.get("/api/v1/isbns/{isbn}/cover", cover),
-            web.get("/api/v1/isbns/{isbn}/editions", editions),
-            web.get("/api/v1/providers", providers),
-            web.get("/api/v1/version", version),
-            web.get("/api/v1/7E2", healthcheck),
+            web.get(api_id + "isbns/{isbn}", bag),
+            web.get(api_id + "isbns/{isbn}/metadata", meta),
+            web.get(api_id + "isbns/{isbn}/metadata/{provider}", meta),
+            web.get(api_id + "isbns/{isbn}/isbn10", isbn10),
+            web.get(api_id + "isbns/{isbn}/isbn13", isbn13),
+            web.get(api_id + "isbns/{isbn}/info", info),
+            web.get(api_id + "isbns/{isbn}/mask", mask),
+            web.get(api_id + "isbns/{isbn}/description", description),
+            web.get(api_id + "isbns/{isbn}/cover", cover),
+            web.get(api_id + "isbns/{isbn}/editions", editions),
+            web.get(api_id + "providers", providers),
+            web.get(api_id + "version", version),
+            web.get(api_id + "7E2", healthcheck),
         ]
     )
     return app
