@@ -1,1 +1,2 @@
 v0.0.1, 2019-05-05 -- Pre-ALPHA (minimum viable product).
+v1.0.0, 2020-01-29 -- First stable eversion.
