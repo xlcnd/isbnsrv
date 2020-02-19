@@ -13,7 +13,6 @@ RUN apk add --update --no-cache \
         gcc \
         libffi-dev
 COPY isbnsrv /isbnsrv/isbnsrv
-# ENV PYTHONDONTWRITEBYTECODE "x"
 ENV SERVICE_NAME "isbnsrv"
 ENV PORT 8080
 EXPOSE 8080
