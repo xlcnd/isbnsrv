@@ -1,0 +1,9 @@
+repo:
+  - ./*
+
+test:
+  - tests/*
+
+core:
+  - isbnsrv/*
+
