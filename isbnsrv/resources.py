@@ -1,10 +1,8 @@
 """Resources manager for 'isbnsrv'."""
 
 import isbnlib
-from isbnlib.registry import PROVIDERS
-from isbnlib._imcache import IMCache
 
-cache = IMCache(maxlen=1000)
+from isbnlib.registry import PROVIDERS, metadata_cache as cache
 
 FIELDS = ("isbn13", "isbn10", "mask", "info", "metadata", "editions", "cover", "description")
 
