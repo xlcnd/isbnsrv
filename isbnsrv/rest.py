@@ -30,11 +30,9 @@ async def bag(request):
     try:
         if params:
             params = tuple(params.split(","))
-            data = await asyncio.get_event_loop().run_in_executor(
-                executor, get_bag, isbn, params
-            )
+            data = await get_bag(isbn, params)
         else:
-            data = await asyncio.get_event_loop().run_in_executor(executor, get_bag, isbn)
+            data = await get_bag(isbn)
     except Exception as exc:
         logger.info("Failed to get the bag for %s - %r", isbn, exc, exc_info=True)
         raise web.HTTPInternalServerError(

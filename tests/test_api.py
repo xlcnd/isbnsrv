@@ -6,6 +6,11 @@ async def test_api(aiohttp_client):
     app = await make_app()
     client = await aiohttp_client(app)
 
+    resp = await client.get("/api/v1/isbns/9780192821911?fields=metadata,goob,description")
+    assert resp.status == 200
+    text = await resp.text()
+    assert "Peloponnesian War" in text
+
     resp = await client.get("/api/v1/isbns/9780140440393/isbn10")
     assert resp.status == 200
     text = await resp.text()

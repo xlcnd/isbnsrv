@@ -1,13 +1,14 @@
 """Resources manager for 'isbnsrv'."""
-
+import asyncio
 import isbnlib
 
 from isbnlib.registry import PROVIDERS, metadata_cache as cache
+from . import executor
 
 FIELDS = ("isbn13", "isbn10", "mask", "info", "metadata", "editions", "cover", "description")
 
 
-def bag(isbn, fields=FIELDS):
+async def bag(isbn, fields=FIELDS):
     """Get all fields (bag) for a given ISBN.
 
        'fields' acts like a filter.
@@ -32,26 +33,37 @@ def bag(isbn, fields=FIELDS):
             if srv in fields:
                 service = srv
                 break
-        metadata = get_meta(isbn, service) if service else get_meta(isbn)
+        if service:
+            metadata = await asyncio.get_event_loop().run_in_executor(
+                executor, get_meta, isbn, service
+            )
+        else:
+            metadata = await asyncio.get_event_loop().run_in_executor(executor, get_meta, isbn)
         res["metadata"] = metadata
 
     if "editions" in fields:
-        res["editions"] = get_editions(isbn)
+        res["editions"] = await asyncio.get_event_loop().run_in_executor(
+            executor, get_editions, isbn
+        )
 
     if "cover" in fields:
-        res["cover"] = get_cover(isbn)
+        res["cover"] = await asyncio.get_event_loop().run_in_executor(
+            executor, get_cover, isbn
+        )
 
     if "description" in fields:
-        res["description"] = get_description(isbn)
+        res["description"] = await asyncio.get_event_loop().run_in_executor(
+            executor, get_description, isbn
+        )
 
     return res
 
 
-def get_bag(isbn, fields=FIELDS):
+async def get_bag(isbn, fields=FIELDS):
     """Get big bag of data."""
     key = isbn + "".join(sorted(fields)) if fields != FIELDS else isbn
     if key not in cache:
-        cache[key] = bag(isbn, fields)
+        cache[key] = await bag(isbn, fields)
     return cache[key]
 
 
