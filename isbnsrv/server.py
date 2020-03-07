@@ -3,22 +3,17 @@
 import logging
 import os
 
-
 from aiohttp import web
 
 from . import __api__, SERVER, rest
-
 from .cache import MemoryCache
-
 from .resources import get_isbn13
 
 
 logger = logging.getLogger("isbnsrv")
-
 logging.basicConfig(level=logging.INFO)
 
 cache = MemoryCache()
-
 api_id = "/api/v" + __api__ + "/"
 
 
