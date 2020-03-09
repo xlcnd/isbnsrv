@@ -1,0 +1,74 @@
+schema {
+  Query
+}
+
+
+type Query {
+  fullIsbn(isbn: String!): ISBN
+  identifiers(isbn: String!): Identifiers
+  metadataDublinCore(isbn: String!, provider: DublinCoreProvider): MetadataDublinCore
+  metadataExtra(isbn: String!): MetadataExtra
+  metadataDublinCoreProviders: [DublinCoreProvider!]
+}
+
+
+type ISBN {
+  isbn13: String!
+  ean13: String!
+  doi: String!
+  isbn10: String
+  info: String
+}
+
+
+type Author {
+  name: String
+}
+
+
+type FAST {
+  numericId: String!
+  classText: String
+}
+
+
+type Identifiers {
+  isbn13: String!
+  ean13: String!
+  isbn10: String
+  doi: String!
+  lcc: String
+  dcc: String
+  owi: String
+  oclc: String
+  fast: [FAST]
+}
+
+
+type Cover {
+  size: String
+  url: String
+}
+
+
+type DublinCoreProvider {
+  name: String!
+}
+
+
+type MetadataDublinCore {
+  isbn13: String!
+  title: String!
+  authors: [Author]
+  publisher: String
+  year: Int
+  language: String
+}
+
+
+type MetadataExtra {
+  description: String
+  identifiers: Identifiers
+  covers: [Cover]
+  editions: [String]
+}
