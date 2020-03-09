@@ -156,19 +156,20 @@ class Query(ObjectType):
 def run():
     schema = Schema(query=Query, auto_camelcase=True)
 
-    # result = schema.execute(
-    #    '''
-    #      query getFullIsbn($isbn: String) {
-    #        fullIsbn(isbn: $isbn) {
-    #          isbn13
-    #          ean13
-    #          isbn10
-    #          info
-    #        }
-    #      }
-    #    ''',
-    #    variables={'isbn': "9780140440393"},
-    # )
+    result = schema.execute(
+        """
+         query FullIsbn($isbn: String!) {
+           fullIsbn(isbn: $isbn) {
+             isbn13
+             ean13
+             doi
+             isbn10
+             info
+           }
+         }
+       """,
+        variables={"isbn": "9780140440393"},
+    )
 
     # result = schema.execute(
     #     '''
@@ -194,20 +195,20 @@ def run():
     #    """
     # )
 
-    result = schema.execute(
-        """
-         query getMetadataDublinCore {
-           metadataDublinCore(isbn: "9780192821911") {
-             isbn13
-             title
-             authors { name }
-             publisher
-             year
-             language
-           }
-         }
-       """
-    )
+    # result = schema.execute(
+    #     """
+    #      query getMetadataDublinCore {
+    #        metadataDublinCore(isbn: "9780192821911") {
+    #          isbn13
+    #          title
+    #          authors { name }
+    #          publisher
+    #          year
+    #          language
+    #        }
+    #      }
+    #    """
+    # )
 
     # result = schema.execute(
     #     """

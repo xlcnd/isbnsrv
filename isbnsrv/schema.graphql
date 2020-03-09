@@ -6,9 +6,9 @@ schema {
 type Query {
   fullIsbn(isbn: String!): ISBN
   identifiers(isbn: String!): Identifiers
-  metadataDublinCore(isbn: String!, provider: DublinCoreProvider): MetadataDublinCore
+  metadataDublinCore(isbn: String!, provider: String): MetadataDublinCore
   metadataExtra(isbn: String!): MetadataExtra
-  metadataDublinCoreProviders: [DublinCoreProvider!]
+  metadataDublinCoreProviders: [MetadataDublinCoreProvider!]
 }
 
 
@@ -51,7 +51,7 @@ type Cover {
 }
 
 
-type DublinCoreProvider {
+type MetadataDublinCoreProvider {
   name: String!
 }
 
