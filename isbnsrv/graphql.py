@@ -1,3 +1,7 @@
+import logging
+
+# from aiohttp import web
+
 from json import dumps
 from graphene import Field, Int, List, ObjectType, String, Schema
 
@@ -14,6 +18,8 @@ from .resources import (
     get_meta,
     get_providers,
 )
+
+logger = logging.getLogger("isbnsrv")
 
 
 class ISBN(ObjectType):
@@ -165,17 +171,19 @@ def run():
     # )
 
     # result = schema.execute(
-    #    '''
-    #      query getFullIsbn {
-    #        fullIsbn(isbn: "9780140440393") {
-    #          isbn13
-    #          ean13
-    #          isbn10
-    #          info
-    #        }
-    #      }
-    #    '''
+    #     '''
+    #       query getFullIsbn {
+    #         fullIsbn(isbn: "9780140440393") {
+    #           isbn13
+    #           ean13
+    #           doi
+    #           isbn10
+    #           info
+    #         }
+    #       }
+    #     '''
     # )
+
     # result = schema.execute(
     #    """
     #      query getProviders {
@@ -185,32 +193,33 @@ def run():
     #      }
     #    """
     # )
-    # result = schema.execute(
-    #    """
-    #      query getMetadataDublinCore {
-    #        metadataDublinCore(isbn: "9780192821911") {
-    #          isbn13
-    #          title
-    #          authors { name }
-    #          publisher
-    #          year
-    #          language
-    #        }
-    #      }
-    #    """
-    # )
 
     result = schema.execute(
         """
-          query getMetadataExtra {
-            metadataExtra(isbn: "9780192821911") {
-              description
-              covers { size, url }
-              identifiers { owi, ddc, fast { numericId, classText } }
-            }
-          }
-        """
+         query getMetadataDublinCore {
+           metadataDublinCore(isbn: "9780192821911") {
+             isbn13
+             title
+             authors { name }
+             publisher
+             year
+             language
+           }
+         }
+       """
     )
+
+    # result = schema.execute(
+    #     """
+    #       query getMetadataExtra {
+    #         metadataExtra(isbn: "9780192821911") {
+    #           description
+    #           covers { size, url }
+    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+    #         }
+    #       }
+    #     """
+    # )
 
     assert not result.errors
     print(dumps(result.data))
