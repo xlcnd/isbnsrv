@@ -115,6 +115,9 @@ def get_doi(isbn):
     return isbnlib.doi(isbn)
 
 
-# async def get_classify(isbn):
-#    dummy = lambda isbn: {"isbn13": isbn, "oclc": "987"}
-#    return await asyncio.get_event_loop().run_in_executor(executor, dummy, isbn)
+# def get_classify(isbn):
+#    return isbnlib.classify(isbn)
+
+
+def get_goom(search_terms):
+    return isbnlib.goom(search_terms)

@@ -15,6 +15,7 @@ from .resources import (
     get_description,
     get_doi,
     get_editions,
+    get_goom,
     get_info,
     get_isbn10,
     get_isbn13,
@@ -80,8 +81,22 @@ class MetadataExtra(ObjectType):
     editions = List(String)
 
 
+def dict_to_metadata(mdict):
+    authors = mdict.get("Authors", [])
+    authors = [Author(name=author) for author in authors]
+    return MetadataDublinCore(
+        isbn13=get_mask(mdict.get("ISBN-13", "")) or mdict.get("ISBN-13", ""),
+        title=mdict.get("Title", ""),
+        authors=authors,
+        publisher=mdict.get("Publisher", ""),
+        year=mdict.get("Year", None),
+        language=mdict.get("Language", ""),
+    )
+
+
 class Query(ObjectType):
 
+    search = Field(List(MetadataDublinCore), search_terms=String(required=True))
     full_isbn = Field(ISBN, isbn=String(required=True))
     metadata_dublin_core = Field(
         MetadataDublinCore, isbn=String(required=True), provider=String(default_value="goob")
@@ -89,27 +104,21 @@ class Query(ObjectType):
     metadata_extra = Field(MetadataExtra, isbn=String(required=True))
     metadata_dublin_core_providers = List(MetadataDublinCoreProvider)
 
+    def resolve_search(root, info, search_terms):
+        meta_list = get_goom(search_terms)
+        return map(dict_to_metadata, meta_list)
+
     def resolve_full_isbn(root, info, isbn):
         return ISBN(
             isbn13=get_mask(get_isbn13(isbn)) or get_isbn13(isbn),
             ean13=get_isbn13(isbn),
             doi=get_doi(isbn),
-            isbn10=get_isbn10(isbn),
+            isbn10=get_mask(get_isbn10(isbn)) or get_isbn10(isbn),
             info=get_info(isbn),
         )
 
     def resolve_metadata_dublin_core(root, info, isbn, provider):
-        meta = get_meta(isbn, provider)
-        authors = meta.get("Authors", [])
-        authors = [Author(name=author) for author in authors]
-        return MetadataDublinCore(
-            isbn13=get_mask(get_isbn13(isbn)) or get_isbn13(isbn),
-            title=meta.get("Title", ""),
-            authors=authors,
-            publisher=meta.get("Publisher", ""),
-            year=meta.get("Year", None),
-            language=meta.get("Language", ""),
-        )
+        return dict_to_metadata(get_meta(isbn, provider))
 
     def resolve_metadata_extra(root, info, isbn):
         def get_covers(isbn):
@@ -170,6 +179,21 @@ def run():
     #     variables={"isbn": "9780140440393"},
     # )
 
+    result = schema.execute(
+        """
+         query Search {
+           search(searchTerms: "the name of the rose") {
+               isbn13
+               title
+               authors { name }
+               publisher
+               year
+               language
+           }
+         }
+        """
+    )
+
     # result = schema.execute(
     #     '''
     #       query FullIsbn {
@@ -209,17 +233,17 @@ def run():
     #    """
     # )
 
-    result = schema.execute(
-        """
-          query MetadataExtra {
-            metadataExtra(isbn: "9780192821911") {
-              description
-              covers { size, url }
-              identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
-            }
-          }
-        """
-    )
+    # result = schema.execute(
+    #     """
+    #       query MetadataExtra {
+    #         metadataExtra(isbn: "9780192821911") {
+    #           description
+    #           covers { size, url }
+    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+    #         }
+    #       }
+    #     """
+    # )
 
     assert not result.errors
     print(dumps(result.data))
