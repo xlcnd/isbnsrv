@@ -1,16 +1,15 @@
 """GRAPHQL API for service 'isbnsrv' (isbnlib)."""
 
-# TODO use asyncio
-
 import logging
 
 # from aiohttp import web
 
 from json import dumps
 from graphene import Field, Int, List, ObjectType, String, Schema
+from graphql.execution.executors.asyncio import AsyncioExecutor
 
 from .resources import (
-    #    get_classify,
+    # get_classify,
     get_cover,
     get_description,
     get_doi,
@@ -177,7 +176,7 @@ def run():
     #      }
     #    """,
     #     variables={"isbn": "9780140440393"},
-    # )
+    # executor=AsyncioExecutor(),)
 
     result = schema.execute(
         """
@@ -191,7 +190,8 @@ def run():
                language
            }
          }
-        """
+        """,
+        executor=AsyncioExecutor(),
     )
 
     # result = schema.execute(
@@ -215,8 +215,8 @@ def run():
     #          name
     #        }
     #      }
-    #    """
-    # )
+    #    """,
+    # executor=AsyncioExecutor(),)
 
     # result = schema.execute(
     #     """
@@ -230,8 +230,8 @@ def run():
     #          language
     #        }
     #      }
-    #    """
-    # )
+    #    """,
+    # executor=AsyncioExecutor(),)
 
     # result = schema.execute(
     #     """
@@ -242,10 +242,12 @@ def run():
     #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
     #         }
     #       }
-    #     """
-    # )
+    #     """,
+    # executor=AsyncioExecutor(),)
 
     assert not result.errors
-    print(dumps(result.data))
+    # with open('result.json', 'w', encoding='utf8') as json_file:
+    #    json.dump(result.data, json_file, ensure_ascii=False)
+    print(dumps(result.data, ensure_ascii=False).encode("utf8").decode())
 
     # print(dumps(schema.introspect()))
