@@ -1,3 +1,7 @@
+"""GRAPHQL API for service 'isbnsrv' (isbnlib)."""
+
+# TODO use asyncio
+
 import logging
 
 # from aiohttp import web
