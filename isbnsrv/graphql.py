@@ -76,35 +76,9 @@ class MetadataExtra(ObjectType):
     editions = List(String)
 
 
-def get_identifiers(isbn):
-    # classifiers = get_classify(isbn)
-    classifiers = {
-        "owi": "3374702141",
-        "oclc": "488613559",
-        "lcc": "DF229.T5",
-        "ddc": "938.05",
-        "fast": {"1000": "dummydummy", "1100": "dummy"},
-    }
-    fast = classifiers.get("fast", "")
-    if fast:
-        fast = [FAST(numeric_id=k, class_text=fast[k]) for k in fast]
-    return Identifiers(
-        isbn13=get_mask(get_isbn13(isbn)) or get_isbn13(isbn),
-        ean13=get_isbn13(isbn),
-        doi=get_doi(isbn),
-        isbn10=get_isbn10(isbn),
-        lcc=classifiers.get("lcc", ""),
-        ddc=classifiers.get("ddc", ""),
-        owi=classifiers.get("owi", ""),
-        oclc=classifiers.get("oclc", ""),
-        fast=fast,
-    )
-
-
 class Query(ObjectType):
 
     full_isbn = Field(ISBN, isbn=String(required=True))
-    identifiers = Field(Identifiers, isbn=String(required=True))
     metadata_dublin_core = Field(
         MetadataDublinCore, isbn=String(required=True), provider=String(default_value="goob")
     )
@@ -119,9 +93,6 @@ class Query(ObjectType):
             isbn10=get_isbn10(isbn),
             info=get_info(isbn),
         )
-
-    def resolve_identifiers(root, info, isbn):
-        return get_identifiers(isbn)
 
     def resolve_metadata_dublin_core(root, info, isbn, provider):
         meta = get_meta(isbn, provider)
@@ -142,6 +113,30 @@ class Query(ObjectType):
             covers = [Cover(size=k, url=covers[k]) for k in covers]
             return covers
 
+        def get_identifiers(isbn):
+            # classifiers = get_classify(isbn)
+            classifiers = {
+                "owi": "3374702141",
+                "oclc": "488613559",
+                "lcc": "DF229.T5",
+                "ddc": "938.05",
+                "fast": {"1000": "dummydummy", "1100": "dummy"},
+            }
+            fast = classifiers.get("fast", "")
+            if fast:
+                fast = [FAST(numeric_id=k, class_text=fast[k]) for k in fast]
+            return Identifiers(
+                isbn13=get_mask(get_isbn13(isbn)) or get_isbn13(isbn),
+                ean13=get_isbn13(isbn),
+                doi=get_doi(isbn),
+                isbn10=get_isbn10(isbn),
+                lcc=classifiers.get("lcc", ""),
+                ddc=classifiers.get("ddc", ""),
+                owi=classifiers.get("owi", ""),
+                oclc=classifiers.get("oclc", ""),
+                fast=fast,
+            )
+
         return MetadataExtra(
             description=get_description(isbn),
             identifiers=get_identifiers(isbn),
@@ -156,24 +151,24 @@ class Query(ObjectType):
 def run():
     schema = Schema(query=Query, auto_camelcase=True)
 
-    result = schema.execute(
-        """
-         query FullIsbn($isbn: String!) {
-           fullIsbn(isbn: $isbn) {
-             isbn13
-             ean13
-             doi
-             isbn10
-             info
-           }
-         }
-       """,
-        variables={"isbn": "9780140440393"},
-    )
+    # result = schema.execute(
+    #     """
+    #      query FullIsbn($isbn: String!) {
+    #        fullIsbn(isbn: $isbn) {
+    #          isbn13
+    #          ean13
+    #          doi
+    #          isbn10
+    #          info
+    #        }
+    #      }
+    #    """,
+    #     variables={"isbn": "9780140440393"},
+    # )
 
     # result = schema.execute(
     #     '''
-    #       query getFullIsbn {
+    #       query FullIsbn {
     #         fullIsbn(isbn: "9780140440393") {
     #           isbn13
     #           ean13
@@ -187,7 +182,7 @@ def run():
 
     # result = schema.execute(
     #    """
-    #      query getProviders {
+    #      query Providers {
     #        metadataDublinCoreProviders {
     #          name
     #        }
@@ -197,7 +192,7 @@ def run():
 
     # result = schema.execute(
     #     """
-    #      query getMetadataDublinCore {
+    #      query MetadataDublinCore {
     #        metadataDublinCore(isbn: "9780192821911") {
     #          isbn13
     #          title
@@ -210,17 +205,17 @@ def run():
     #    """
     # )
 
-    # result = schema.execute(
-    #     """
-    #       query getMetadataExtra {
-    #         metadataExtra(isbn: "9780192821911") {
-    #           description
-    #           covers { size, url }
-    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
-    #         }
-    #       }
-    #     """
-    # )
+    result = schema.execute(
+        """
+          query MetadataExtra {
+            metadataExtra(isbn: "9780192821911") {
+              description
+              covers { size, url }
+              identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+            }
+          }
+        """
+    )
 
     assert not result.errors
     print(dumps(result.data))
