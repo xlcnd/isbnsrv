@@ -178,21 +178,21 @@ def run():
     #     variables={"isbn": "9780140440393"},
     # executor=AsyncioExecutor(),)
 
-    result = schema.execute(
-        """
-         query Search {
-           search(searchTerms: "the name of the rose") {
-               isbn13
-               title
-               authors { name }
-               publisher
-               year
-               language
-           }
-         }
-        """,
-        executor=AsyncioExecutor(),
-    )
+    # result = schema.execute(
+    #     """
+    #      query Search {
+    #        search(searchTerms: "the name of the rose") {
+    #            isbn13
+    #            title
+    #            authors { name }
+    #            publisher
+    #            year
+    #            language
+    #        }
+    #      }
+    #     """,
+    #     executor=AsyncioExecutor(),
+    # )
 
     # result = schema.execute(
     #     '''
@@ -205,7 +205,8 @@ def run():
     #           info
     #         }
     #       }
-    #     '''
+    #     ''',
+    #     executor=AsyncioExecutor(),
     # )
 
     # result = schema.execute(
@@ -233,17 +234,18 @@ def run():
     #    """,
     # executor=AsyncioExecutor(),)
 
-    # result = schema.execute(
-    #     """
-    #       query MetadataExtra {
-    #         metadataExtra(isbn: "9780192821911") {
-    #           description
-    #           covers { size, url }
-    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
-    #         }
-    #       }
-    #     """,
-    # executor=AsyncioExecutor(),)
+    result = schema.execute(
+        """
+          query MetadataExtra {
+            metadataExtra(isbn: "9780192821911") {
+              description
+              covers { size, url }
+              identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+            }
+          }
+        """,
+        executor=AsyncioExecutor(),
+    )
 
     assert not result.errors
     # with open('result.json', 'w', encoding='utf8') as json_file:

@@ -47,3 +47,4 @@ poetry.lock
 .venv/
 .pre-commit-config.yaml
 *tasks*
+*NOTES*
