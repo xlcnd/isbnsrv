@@ -108,18 +108,28 @@ class Query(ObjectType):
         return map(dict_to_metadata, meta_list)
 
     def resolve_full_isbn(root, info, isbn):
+        isbn = get_isbn13(isbn)
+        if not isbn:
+            raise Exception("Not valid isbn")
         return ISBN(
-            isbn13=get_mask(get_isbn13(isbn)) or get_isbn13(isbn),
-            ean13=get_isbn13(isbn),
+            isbn13=get_mask(isbn) or isbn,
+            ean13=isbn,
             doi=get_doi(isbn),
             isbn10=get_mask(get_isbn10(isbn)) or get_isbn10(isbn),
             info=get_info(isbn),
         )
 
     def resolve_metadata_dublin_core(root, info, isbn, provider):
+        isbn = get_isbn13(isbn)
+        if not isbn:
+            raise Exception("Not valid isbn")
         return dict_to_metadata(get_meta(isbn, provider))
 
     def resolve_metadata_extra(root, info, isbn):
+        isbn = get_isbn13(isbn)
+        if not isbn:
+            raise Exception("Not valid isbn")
+
         def get_covers(isbn):
             covers = get_cover(isbn)
             covers = [Cover(size=k, url=covers[k]) for k in covers]
@@ -194,20 +204,18 @@ def run():
     #     executor=AsyncioExecutor(),
     # )
 
-    # result = schema.execute(
-    #     '''
-    #       query FullIsbn {
-    #         fullIsbn(isbn: "9780140440393") {
-    #           isbn13
-    #           ean13
-    #           doi
-    #           isbn10
-    #           info
-    #         }
-    #       }
-    #     ''',
-    #     executor=AsyncioExecutor(),
-    # )
+    q = """
+          query FullIsbn {
+            fullIsbn(isbn: "9780140440393") {
+              isbn13
+              ean13
+              doi
+              isbn10
+              info
+            }
+          }
+        """
+    result = schema.execute(q, executor=AsyncioExecutor())
 
     # result = schema.execute(
     #    """
@@ -234,20 +242,20 @@ def run():
     #    """,
     # executor=AsyncioExecutor(),)
 
-    result = schema.execute(
-        """
-          query MetadataExtra {
-            metadataExtra(isbn: "9780192821911") {
-              description
-              covers { size, url }
-              identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
-            }
-          }
-        """,
-        executor=AsyncioExecutor(),
-    )
+    # result = schema.execute(
+    #     """
+    #       query MetadataExtra {
+    #         metadataExtra(isbn: "978019282191") {
+    #           description
+    #           covers { size, url }
+    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+    #         }
+    #       }
+    #     """,
+    #     executor=AsyncioExecutor(),
+    # )
 
-    assert not result.errors
+    # assert not result.errors
     # with open('result.json', 'w', encoding='utf8') as json_file:
     #    json.dump(result.data, json_file, ensure_ascii=False)
     print(dumps(result.data, ensure_ascii=False).encode("utf8").decode())
