@@ -188,34 +188,34 @@ def run():
     #     variables={"isbn": "9780140440393"},
     # executor=AsyncioExecutor(),)
 
-    # result = schema.execute(
-    #     """
-    #      query Search {
-    #        search(searchTerms: "the name of the rose") {
-    #            isbn13
-    #            title
-    #            authors { name }
-    #            publisher
-    #            year
-    #            language
-    #        }
-    #      }
-    #     """,
-    #     executor=AsyncioExecutor(),
-    # )
-
-    q = """
-          query FullIsbn {
-            fullIsbn(isbn: "9780140440393") {
-              isbn13
-              ean13
-              doi
-              isbn10
-              info
-            }
-          }
+    result = schema.execute(
         """
-    result = schema.execute(q, executor=AsyncioExecutor())
+         query Search {
+           search(searchTerms: "reveries of a solitary walker") {
+               isbn13
+               title
+               authors { name }
+               publisher
+               year
+               language
+           }
+         }
+        """,
+        executor=AsyncioExecutor(),
+    )
+
+    # q = """
+    #       query FullIsbn {
+    #         fullIsbn(isbn: "9780140440393") {
+    #           isbn13
+    #           ean13
+    #           doi
+    #           isbn10
+    #           info
+    #         }
+    #       }
+    #     """
+    # result = schema.execute(q, executor=AsyncioExecutor())
 
     # result = schema.execute(
     #    """

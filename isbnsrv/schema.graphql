@@ -4,7 +4,7 @@ schema {
 
 
 type Query {
-  search(text: String!): [MetadataDublinCore]
+  search(searchTerms: String!): [MetadataDublinCore]
   fullIsbn(isbn: String!): ISBN
   metadataDublinCore(isbn: String!, provider: String): MetadataDublinCore
   metadataExtra(isbn: String!): MetadataExtra
