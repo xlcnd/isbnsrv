@@ -5,9 +5,10 @@ import os
 
 from aiohttp import web
 
-from . import __api__, SERVER, rest
+from . import __api__, SERVER
 from .cache import MemoryCache
 from .resources import get_isbn13
+from .rest import rest
 
 
 logger = logging.getLogger("isbnsrv")

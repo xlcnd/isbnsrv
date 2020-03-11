@@ -5,9 +5,9 @@ import logging
 
 from aiohttp import web
 
-from . import SERVER, executor
+from .. import SERVER, executor
 
-from .resources import (
+from ..resources import (
     get_bag,
     get_cover,
     get_description,

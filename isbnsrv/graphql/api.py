@@ -6,8 +6,8 @@ import logging
 # from aiohttp import web
 from graphene import Field, List, ObjectType, String, Schema
 
-from . import executor
-from .resources import (
+from .. import executor
+from ..resources import (
     # get_classify,
     get_cover,
     get_description,

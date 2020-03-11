@@ -5,7 +5,7 @@ from json import dumps
 # from aiohttp import web
 from graphql.execution.executors.asyncio import AsyncioExecutor
 
-from .graphql_api import schema
+from .api import schema
 
 logger = logging.getLogger("isbnsrv")
 

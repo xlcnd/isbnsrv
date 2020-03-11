@@ -1,6 +1,6 @@
 import logging
 
-from .resources import get_mask
+from ..resources import get_mask
 from .typedefs import Author, MetadataDublinCore
 
 
