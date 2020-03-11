@@ -1,13 +1,15 @@
 """GRAPHQL API for service 'isbnsrv' (isbnlib)."""
 
+import asyncio
 import logging
 
-# from aiohttp import web
-
 from json import dumps
+
+# from aiohttp import web
 from graphene import Field, Int, List, ObjectType, String, Schema
 from graphql.execution.executors.asyncio import AsyncioExecutor
 
+from . import executor
 from .resources import (
     # get_classify,
     get_cover,
@@ -103,8 +105,10 @@ class Query(ObjectType):
     metadata_extra = Field(MetadataExtra, isbn=String(required=True))
     metadata_dublin_core_providers = List(MetadataDublinCoreProvider)
 
-    def resolve_search(root, info, search_terms):
-        meta_list = get_goom(search_terms)
+    async def resolve_search(root, info, search_terms):
+        meta_list = await asyncio.get_event_loop().run_in_executor(
+            executor, get_goom, search_terms
+        )
         return map(dict_to_metadata, meta_list)
 
     def resolve_full_isbn(root, info, isbn):
@@ -119,24 +123,27 @@ class Query(ObjectType):
             info=get_info(isbn),
         )
 
-    def resolve_metadata_dublin_core(root, info, isbn, provider):
+    async def resolve_metadata_dublin_core(root, info, isbn, provider):
         isbn = get_isbn13(isbn)
         if not isbn:
             raise Exception("Not valid isbn")
-        return dict_to_metadata(get_meta(isbn, provider))
+        meta = await asyncio.get_event_loop().run_in_executor(
+            executor, get_meta, isbn, provider
+        )
+        return dict_to_metadata(meta)
 
-    def resolve_metadata_extra(root, info, isbn):
+    async def resolve_metadata_extra(root, info, isbn):
         isbn = get_isbn13(isbn)
         if not isbn:
             raise Exception("Not valid isbn")
 
-        def get_covers(isbn):
-            covers = get_cover(isbn)
+        async def get_covers(isbn):
+            covers = await asyncio.get_event_loop().run_in_executor(executor, get_cover, isbn)
             covers = [Cover(size=k, url=covers[k]) for k in covers]
             return covers
 
-        def get_identifiers(isbn):
-            # classifiers = get_classify(isbn)
+        async def get_identifiers(isbn):
+            # classifiers = await asyncio.get_event_loop().run_in_executor(executor, get_classify, isbn)
             classifiers = {
                 "owi": "3374702141",
                 "oclc": "488613559",
@@ -144,9 +151,11 @@ class Query(ObjectType):
                 "ddc": "938.05",
                 "fast": {"1000": "dummydummy", "1100": "dummy"},
             }
-            fast = classifiers.get("fast", "")
+            fast = classifiers.get("fast", {})
             if fast:
                 fast = [FAST(numeric_id=k, class_text=fast[k]) for k in fast]
+            else:
+                fast = [{}]
             return Identifiers(
                 isbn13=get_mask(get_isbn13(isbn)) or get_isbn13(isbn),
                 ean13=get_isbn13(isbn),
@@ -159,11 +168,19 @@ class Query(ObjectType):
                 fast=fast,
             )
 
+        async def get_desc(isbn):
+            return await asyncio.get_event_loop().run_in_executor(
+                executor, get_description, isbn
+            )
+
+        async def get_eds(isbn):
+            return await asyncio.get_event_loop().run_in_executor(executor, get_editions, isbn)
+
         return MetadataExtra(
-            description=get_description(isbn),
-            identifiers=get_identifiers(isbn),
-            covers=get_covers(isbn),
-            editions=get_editions(isbn),
+            description=await get_desc(isbn),
+            identifiers=await get_identifiers(isbn),
+            covers=await get_covers(isbn),
+            editions=await get_eds(isbn),
         )
 
     def resolve_metadata_dublin_core_providers(root, info):
@@ -188,21 +205,21 @@ def run():
     #     variables={"isbn": "9780140440393"},
     # executor=AsyncioExecutor(),)
 
-    result = schema.execute(
-        """
-         query Search {
-           search(searchTerms: "reveries of a solitary walker") {
-               isbn13
-               title
-               authors { name }
-               publisher
-               year
-               language
-           }
-         }
-        """,
-        executor=AsyncioExecutor(),
-    )
+    # result = schema.execute(
+    #     """
+    #      query Search {
+    #        search(searchTerms: "reveries of a solitary walker") {
+    #            isbn13
+    #            title
+    #            authors { name }
+    #            publisher
+    #            year
+    #            language
+    #        }
+    #      }
+    #     """,
+    #     executor=AsyncioExecutor(),
+    # )
 
     # q = """
     #       query FullIsbn {
@@ -240,20 +257,22 @@ def run():
     #        }
     #      }
     #    """,
-    # executor=AsyncioExecutor(),)
-
-    # result = schema.execute(
-    #     """
-    #       query MetadataExtra {
-    #         metadataExtra(isbn: "978019282191") {
-    #           description
-    #           covers { size, url }
-    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
-    #         }
-    #       }
-    #     """,
     #     executor=AsyncioExecutor(),
     # )
+
+    result = schema.execute(
+        """
+          query MetadataExtra {
+            metadataExtra(isbn: "9780192821911") {
+              description
+              covers { size, url }
+              identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+              editions
+            }
+          }
+        """,
+        executor=AsyncioExecutor(),
+    )
 
     # assert not result.errors
     # with open('result.json', 'w', encoding='utf8') as json_file:
