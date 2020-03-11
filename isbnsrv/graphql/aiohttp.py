@@ -1,3 +1,5 @@
+"""graphene-aiohttp integration."""
+
 import logging
 
 from json import dumps
