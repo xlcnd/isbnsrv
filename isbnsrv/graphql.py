@@ -205,21 +205,18 @@ def run():
     #     variables={"isbn": "9780140440393"},
     # executor=AsyncioExecutor(),)
 
-    # result = schema.execute(
+    # q = """
+    #       query Search {
+    #         search(searchTerms: "reveries of a solitary walker") {
+    #             isbn13
+    #             title
+    #             authors { name }
+    #             publisher
+    #             year
+    #             language
+    #         }
+    #       }
     #     """
-    #      query Search {
-    #        search(searchTerms: "reveries of a solitary walker") {
-    #            isbn13
-    #            title
-    #            authors { name }
-    #            publisher
-    #            year
-    #            language
-    #        }
-    #      }
-    #     """,
-    #     executor=AsyncioExecutor(),
-    # )
 
     # q = """
     #       query FullIsbn {
@@ -232,36 +229,29 @@ def run():
     #         }
     #       }
     #     """
-    # result = schema.execute(q, executor=AsyncioExecutor())
 
-    # result = schema.execute(
-    #    """
-    #      query Providers {
-    #        metadataDublinCoreProviders {
-    #          name
-    #        }
-    #      }
-    #    """,
-    # executor=AsyncioExecutor(),)
-
-    # result = schema.execute(
+    # q = """
+    #       query Providers {
+    #         metadataDublinCoreProviders {
+    #           name
+    #         }
+    #       }
     #     """
-    #      query MetadataDublinCore {
-    #        metadataDublinCore(isbn: "9780192821911") {
-    #          isbn13
-    #          title
-    #          authors { name }
-    #          publisher
-    #          year
-    #          language
-    #        }
-    #      }
-    #    """,
-    #     executor=AsyncioExecutor(),
-    # )
 
-    result = schema.execute(
-        """
+    # q = """
+    #       query MetadataDublinCore {
+    #         metadataDublinCore(isbn: "9780192821911") {
+    #           isbn13
+    #           title
+    #           authors { name }
+    #           publisher
+    #           year
+    #           language
+    #         }
+    #      }
+    #    """
+
+    q = """
           query MetadataExtra {
             metadataExtra(isbn: "9780192821911") {
               description
@@ -270,9 +260,9 @@ def run():
               editions
             }
           }
-        """,
-        executor=AsyncioExecutor(),
-    )
+        """
+
+    result = schema.execute(q, executor=AsyncioExecutor())
 
     # assert not result.errors
     # with open('result.json', 'w', encoding='utf8') as json_file:
