@@ -6,7 +6,7 @@ import logging
 from json import dumps
 
 # from aiohttp import web
-from graphene import Field, Int, List, ObjectType, String, Schema
+from graphene import Field, List, ObjectType, String, Schema
 from graphql.execution.executors.asyncio import AsyncioExecutor
 
 from . import executor
@@ -24,75 +24,19 @@ from .resources import (
     get_meta,
     get_providers,
 )
+from .typedefs import (
+    ISBN,
+    MetadataDublinCoreProvider,
+    FAST,
+    Identifiers,
+    Cover,
+    MetadataDublinCore,
+    MetadataExtra,
+)
+from .utils import dict_to_metadata
+
 
 logger = logging.getLogger("isbnsrv")
-
-
-class ISBN(ObjectType):
-    isbn13 = String(required=True)
-    ean13 = String(required=True)
-    doi = String(required=True)
-    isbn10 = String()
-    info = String()
-
-
-class MetadataDublinCoreProvider(ObjectType):
-    name = String()
-
-
-class FAST(ObjectType):
-    numeric_id = String()
-    class_text = String()
-
-
-class Author(ObjectType):
-    name = String()
-
-
-class Identifiers(ObjectType):
-    isbn13 = String(required=True)
-    ean13 = String(required=True)
-    doi = String(required=True)
-    isbn10 = String()
-    lcc = String()
-    ddc = String()
-    owi = String()
-    oclc = String()
-    fast = List(FAST)
-
-
-class Cover(ObjectType):
-    size = String()
-    url = String()
-
-
-class MetadataDublinCore(ObjectType):
-    isbn13 = String(required=True)
-    title = String(required=True)
-    authors = List(Author)
-    publisher = String()
-    year = Int()
-    language = String()
-
-
-class MetadataExtra(ObjectType):
-    description = String()
-    identifiers = Field(Identifiers)
-    covers = List(Cover)
-    editions = List(String)
-
-
-def dict_to_metadata(mdict):
-    authors = mdict.get("Authors", [])
-    authors = [Author(name=author) for author in authors]
-    return MetadataDublinCore(
-        isbn13=get_mask(mdict.get("ISBN-13", "")) or mdict.get("ISBN-13", ""),
-        title=mdict.get("Title", ""),
-        authors=authors,
-        publisher=mdict.get("Publisher", ""),
-        year=mdict.get("Year", None),
-        language=mdict.get("Language", ""),
-    )
 
 
 class Query(ObjectType):
@@ -187,8 +131,10 @@ class Query(ObjectType):
         return [MetadataDublinCoreProvider(name=prov) for prov in get_providers()]
 
 
+schema = Schema(query=Query, auto_camelcase=True)
+
+
 def run():
-    schema = Schema(query=Query, auto_camelcase=True)
 
     # result = schema.execute(
     #     """
@@ -205,18 +151,18 @@ def run():
     #     variables={"isbn": "9780140440393"},
     # executor=AsyncioExecutor(),)
 
-    # q = """
-    #       query Search {
-    #         search(searchTerms: "reveries of a solitary walker") {
-    #             isbn13
-    #             title
-    #             authors { name }
-    #             publisher
-    #             year
-    #             language
-    #         }
-    #       }
-    #     """
+    q = """
+          query Search {
+            search(searchTerms: "reveries of a solitary walker") {
+                isbn13
+                title
+                authors { name }
+                publisher
+                year
+                language
+            }
+          }
+        """
 
     # q = """
     #       query FullIsbn {
@@ -251,16 +197,16 @@ def run():
     #      }
     #    """
 
-    q = """
-          query MetadataExtra {
-            metadataExtra(isbn: "9780192821911") {
-              description
-              covers { size, url }
-              identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
-              editions
-            }
-          }
-        """
+    # q = """
+    #       query MetadataExtra {
+    #         metadataExtra(isbn: "9780192821911") {
+    #           description
+    #           covers { size, url }
+    #           identifiers { isbn13, doi, owi, ddc, fast { numericId, classText } }
+    #           editions
+    #         }
+    #       }
+    #     """
 
     result = schema.execute(q, executor=AsyncioExecutor())
 
