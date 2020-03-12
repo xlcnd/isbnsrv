@@ -9,6 +9,7 @@ from . import __api__, SERVER
 from .cache import MemoryCache
 from .resources import get_isbn13
 from .rest import rest
+from .gql.aiohttp import exe as gql
 
 
 logger = logging.getLogger("isbnsrv")
@@ -49,6 +50,11 @@ async def validate_isbn_middleware(request, handler):
 
 @web.middleware
 async def cache_middleware(request, handler):
+    # FIXME  only works for GET because key is not distinctive enough...
+    # for GraphQL the caching is done by graphene!
+    if request.method != "GET":
+        return await handler(request)
+    # ------
     key = await make_key(request)
     if await cache.has(key):
         data = await cache.get(key)
@@ -108,6 +114,7 @@ async def make_app():
             web.get(api_id + "providers", rest.providers),
             web.get(api_id + "version", version),
             web.get(api_id + "7E2", healthcheck),
+            web.post("/graphql", gql),
         ]
     )
     return app
