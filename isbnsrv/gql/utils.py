@@ -15,6 +15,6 @@ def dict_to_metadata(mdict):
         title=mdict.get("Title", ""),
         authors=authors,
         publisher=mdict.get("Publisher", ""),
-        year=mdict.get("Year", None),
+        year=mdict.get("Year", ""),
         language=mdict.get("Language", ""),
     )

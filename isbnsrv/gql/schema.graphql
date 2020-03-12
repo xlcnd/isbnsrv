@@ -61,7 +61,7 @@ type MetadataDublinCore {
   title: String!
   authors: [Author]
   publisher: String
-  year: Int
+  year: String
   language: String
 }
 

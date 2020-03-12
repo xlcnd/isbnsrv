@@ -1,6 +1,6 @@
 """GRAPHQL API for service 'isbnsrv' (isbnlib)."""
 
-from graphene import Field, Int, List, ObjectType, String
+from graphene import Field, List, ObjectType, String
 
 
 class ISBN(ObjectType):
@@ -46,7 +46,7 @@ class MetadataDublinCore(ObjectType):
     title = String(required=True)
     authors = List(Author)
     publisher = String()
-    year = Int()
+    year = String()
     language = String()
 
 

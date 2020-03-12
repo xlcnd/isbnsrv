@@ -3,6 +3,8 @@
 import logging
 import os
 
+from hashlib import sha256
+
 from aiohttp import web
 
 from . import __api__, SERVER
@@ -20,14 +22,15 @@ api_id = "/api/v" + __api__ + "/"
 
 
 async def make_key(request):
-    key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
+    key = "{method}#{host}#{path}#{postdata}#{ctype}#{data}".format(
         method=request.method,
         path=request.rel_url.path_qs,
         host=request.url.host,
         postdata="".join(await request.post()),
         ctype=request.content_type,
+        data=await request.text(),
     )
-    return key
+    return sha256(key.encode()).hexdigest()
 
 
 async def healthcheck(request):
@@ -50,11 +53,6 @@ async def validate_isbn_middleware(request, handler):
 
 @web.middleware
 async def cache_middleware(request, handler):
-    # FIXME  only works for GET because key is not distinctive enough...
-    # for GraphQL the caching is done by graphene!
-    if request.method != "GET":
-        return await handler(request)
-    # ------
     key = await make_key(request)
     if await cache.has(key):
         data = await cache.get(key)
