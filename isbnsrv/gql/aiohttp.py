@@ -13,21 +13,17 @@ from .. import SERVER
 logger = logging.getLogger("isbnsrv")
 
 
+# From request:
+# 1. if POST get body
+# 2. parse body (query, params, name)
+# 3. validate body
+# 4. validate inputs: schema, ...
+# 5. set headers
+# 6. await execute query
+# 7. set response (format, encoding, ...)
+
+
 async def gql(request):
-
-    # From request:
-    # 1. if POST get body
-    # 2. parse body (query, params, name)
-    # 3. validate body
-    # 4. validate inputs: schema, ...
-    # 5. set headers
-    # 6. await execute query
-    # 7. set response (format, encoding, ...)
-    return
-
-
-async def exe(request):
-
     # if request.can_read_body:
     data = await request.json()
     # print(data)
@@ -132,7 +128,7 @@ async def exe(request):
 
 
 # def run():
-#   asyncio.run(exe())  #py3.7+
+#   asyncio.run(gql())  #py3.7+
 #    loop = asyncio.get_event_loop()
-#    loop.run_until_complete(exe())
+#    loop.run_until_complete(gql())
 #    loop.close()

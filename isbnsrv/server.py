@@ -11,7 +11,7 @@ from . import __api__, SERVER
 from .cache import MemoryCache
 from .resources import get_isbn13
 from .rest import rest
-from .gql.aiohttp import exe as gql
+from .gql.aiohttp import gql
 
 
 logger = logging.getLogger("isbnsrv")
@@ -22,13 +22,12 @@ api_id = "/api/v" + __api__ + "/"
 
 
 async def make_key(request):
-    key = "{method}#{host}#{path}#{postdata}#{ctype}#{data}".format(
+    key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
         method=request.method,
         path=request.rel_url.path_qs,
         host=request.url.host,
-        postdata="".join(await request.post()),
+        postdata=await request.text(),
         ctype=request.content_type,
-        data=await request.text(),
     )
     return sha256(key.encode()).hexdigest()
 
