@@ -10,8 +10,12 @@ from .. import SERVER
 
 logger = logging.getLogger("isbnsrv")
 
+# TODO(handle batch requests https://github.com/syrusakbary/aiodataloader)
+
 
 async def gql(request):
+    """Parse the request and resolve the graphql query."""
+
     try:
         data = await request.json()
     except Exception as exc:
@@ -19,6 +23,7 @@ async def gql(request):
         raise web.HTTPBadRequest(
             reason="Failed to get the POST body's text. Check the JSON sent."
         )
+
     try:
         query = data.get("query")
         if not query:
@@ -44,7 +49,5 @@ async def gql(request):
         err = result.errors[0]
         logger.debug("Failed to execute the query - %r", err)
         raise web.HTTPBadRequest(reason=f"Failed to execute the query -- {err}.")
-
-    # print(dumps(schema.introspect()))
 
     return web.json_response(result.data, status=200, headers=SERVER)
