@@ -11,6 +11,8 @@ from .. import SERVER
 logger = logging.getLogger("isbnsrv")
 
 # TODO(handle batch requests https://github.com/syrusakbary/aiodataloader)
+# However due to the nature of the external services only allow batch requests
+# for core services.
 
 
 async def gql(request):
