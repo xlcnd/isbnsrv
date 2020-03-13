@@ -3,12 +3,10 @@
 import logging
 import os
 
-from hashlib import sha256
-
 from aiohttp import web
 
 from . import __api__, SERVER
-from .cache import MemoryCache
+from .cache import MemoryCache, make_key
 from .resources import get_isbn13
 from .rest import rest
 from .gql.aiohttp import gql
@@ -21,23 +19,39 @@ cache = MemoryCache()
 api_id = "/api/v" + __api__ + "/"
 
 
-async def make_key(request):
-    key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
-        method=request.method,
-        path=request.rel_url.path_qs,
-        host=request.url.host,
-        postdata=await request.text(),
-        ctype=request.content_type,
-    )
-    return sha256(key.encode()).hexdigest()
-
-
 async def healthcheck(request):
     return web.json_response({"isbnsrv": "OK"}, status=200, headers=SERVER)
 
 
 async def version(request):
     return web.json_response({"version": SERVER["Server"]}, status=200, headers=SERVER)
+
+
+@web.middleware
+async def preflight_middleware(request, handler):
+    """Preflight request support for apollo-client.
+
+       https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
+    """
+    if request.method.upper() == "OPTIONS":
+        headers = request.headers
+        origin = headers.get("Origin", "")
+        method = headers.get("Access-Control-Request-Method", "").upper()
+
+        accepted_methods = ["GET", "OPTIONS"]
+        if request.path == "/graphql":
+            accepted_methods = ["POST", "OPTIONS"]
+        if method and method in accepted_methods:
+            return web.Response(
+                status=200,
+                headers={
+                    "Access-Control-Allow-Origin": origin,
+                    "Access-Control-Allow-Methods": ", ".join(accepted_methods),
+                    "Access-Control-Max-Age": str(86400),
+                },
+            )
+        return web.Response(status=400)
+    return await handler(request)
 
 
 @web.middleware
@@ -88,13 +102,18 @@ async def error_middleware(request, handler):
             )
         else:
             logger.info("(%s) HTTPException in error_middleware - %s", status, message)
-    data = {"ERROR": {"code": status, "reason": message}}
+    data = {"errors": [{"code": status, "reason": message}]}
     return web.json_response(data, status=status, headers=SERVER)
 
 
 async def make_app():
     app = web.Application(
-        middlewares=[error_middleware, cache_middleware, validate_isbn_middleware]
+        middlewares=[
+            preflight_middleware,
+            error_middleware,
+            cache_middleware,
+            validate_isbn_middleware,
+        ]
     )
     app.add_routes(
         [

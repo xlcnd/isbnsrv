@@ -1,5 +1,7 @@
 """Read and write to a dict-like cache."""
 
+from hashlib import sha256
+
 
 class MemoryCache:
     """Read and write to a dict-like cache."""
@@ -33,3 +35,14 @@ class MemoryCache:
 
     async def len(self):
         return len(self.d)
+
+
+async def make_key(request):
+    key = "{method}#{host}#{path}#{postdata}#{ctype}".format(
+        method=request.method,
+        path=request.rel_url.path_qs,
+        host=request.url.host,
+        postdata=await request.text(),
+        ctype=request.content_type,
+    )
+    return sha256(key.encode()).hexdigest()
