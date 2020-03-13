@@ -104,7 +104,7 @@ async def test_api(aiohttp_client):
     resp = await client.get("/api/v1/isbns/978014044039")
     assert resp.status == 404
     text = await resp.text()
-    assert "ERROR" in text
+    assert "errors" in text
 
 
 # request on different (app) instance
@@ -127,3 +127,15 @@ async def test_isbn13(aiohttp_client):
     assert resp.status == 200
     text = await resp.text()
     assert '{"isbn13": "9780140440393"}' == text
+
+
+async def test_graphql(aiohttp_client):
+    app = await make_app()
+    client = await aiohttp_client(app)
+
+    resp = await client.post(
+        "/graphql", json={"query": "query Providers { metadataDublinCoreProviders { name } }"}
+    )
+    assert resp.status == 200
+    text = await resp.text()
+    assert "goob" in text
