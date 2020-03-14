@@ -50,3 +50,11 @@ exclude = '''
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+
+[tool.poetry.scripts]
+run = "wsgi:main"
+
+[tool.poetry.urls]
+issues = "https://github.com/xlcnd/isbnsrv/issues"
+
