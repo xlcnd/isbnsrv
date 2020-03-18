@@ -46,10 +46,10 @@ async def gql(request):
             return_promise=True,
         )
         if result.errors:
-            raise Exception("execution errors")
-    except Exception:
-        err = result.errors[0]
-        logger.debug("Failed to execute the query - %r", err)
-        raise web.HTTPBadRequest(reason=f"Failed to execute the query -- {err}.")
+            err = result.errors[0]
+            raise Exception("execution errors - %r", err)
+    except Exception as exc:
+        logger.debug("Failed to execute the query - %r", exc)
+        raise web.HTTPBadRequest(reason=f"Failed to execute the query -- {exc}.")
 
     return web.json_response(result.data, status=200, headers=SERVER)
