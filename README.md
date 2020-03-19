@@ -2,18 +2,6 @@
 ===========================
 
 
-New
----
-
->Now is available a graphql api at `http://localhost:8080/graphql`.
-
-
-Warning
--------
-
->**Please** don't expose this service to the public web,
->use it only as a microservice inside your app.
-
 
 To try it, you need to install Docker in your system and clone this repository.
 Then enter in a terminal (inside directory `isbnsrv-master`):
@@ -60,3 +48,19 @@ considered and the response is very slow. You should be very specific and
 
 Bags are slow with fields `editions`, `cover`, `metadata` or `description` and fast with fields
 `isbn10`, `isbn13`, `mask` or `info`.
+
+
+Warning
+-------
+
+>**Please** don't expose this service to the public web,
+>use it only as a microservice inside your app.
+
+
+
+New
+---
+
+>Now is available a graphql api at `http://localhost:8080/graphql`.
+
+
