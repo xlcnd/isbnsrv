@@ -26,6 +26,7 @@ http://localhost:8080/api/v1/isbns/9780375869020/info
 http://localhost:8080/api/v1/isbns/9780375869020/mask
 http://localhost:8080/api/v1/isbns/9780375869020/description
 http://localhost:8080/api/v1/isbns/9780375869020/cover
+http://localhost:8080/api/v1/isbns/9780375869020/classifiers
 http://localhost:8080/api/v1/isbns/9780375869020/editions
 http://localhost:8080/api/v1/providers
 http://localhost:8080/api/v1/version
@@ -46,7 +47,7 @@ If you don't indicate any field (like in the first example above) all fields are
 considered and the response is very slow. You should be very specific and
 **choose the fields that you need**.
 
-Bags are slow with fields `editions`, `cover`, `metadata` or `description` and fast with fields
+Bags are slow with fields `editions`, `cover`, `classifiers`, `metadata` or `description` and fast with fields
 `isbn10`, `isbn13`, `mask` or `info`.
 
 

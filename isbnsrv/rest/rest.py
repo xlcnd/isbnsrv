@@ -9,6 +9,7 @@ from .. import SERVER, executor
 
 from ..resources import (
     get_bag,
+    get_classify,
     get_cover,
     get_description,
     get_editions,
@@ -123,6 +124,19 @@ async def editions(request):
             reason=f"Internal server error for {isbn}!"
         ) from None
     data = {"editions": data}
+    return web.json_response(data, headers=SERVER)
+
+
+async def classify(request):
+    isbn = request.match_info.get("isbn", "")
+    try:
+        data = await asyncio.get_event_loop().run_in_executor(executor, get_classify, isbn)
+    except Exception as exc:
+        logger.info("Failed to get the classifiers for %s - %r", isbn, exc, exc_info=True)
+        raise web.HTTPInternalServerError(
+            reason=f"Internal server error for {isbn}!"
+        ) from None
+    data = {"classifiers": data}
     return web.json_response(data, headers=SERVER)
 
 

@@ -71,6 +71,11 @@ async def test_api(aiohttp_client):
     text = await resp.text()
     assert "Peloponnesian" in text
 
+    resp = await client.get("/api/v1/isbns/9780375869020/classifiers")
+    assert resp.status == 200
+    text = await resp.text()
+    assert "owi" in text
+
     resp = await client.get("/api/v1/isbns/9780192821911/cover")
     assert resp.status == 200
     text = await resp.text()

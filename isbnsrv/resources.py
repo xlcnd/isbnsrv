@@ -5,7 +5,17 @@ import isbnlib
 from isbnlib.registry import PROVIDERS, metadata_cache as cache
 from . import executor
 
-FIELDS = ("isbn13", "isbn10", "mask", "info", "metadata", "editions", "cover", "description")
+FIELDS = (
+    "isbn13",
+    "isbn10",
+    "mask",
+    "info",
+    "metadata",
+    "editions",
+    "classifiers",
+    "cover",
+    "description",
+)
 
 
 async def bag(isbn, fields=FIELDS):
@@ -54,6 +64,11 @@ async def bag(isbn, fields=FIELDS):
     if "description" in fields:
         res["description"] = await asyncio.get_event_loop().run_in_executor(
             executor, get_description, isbn
+        )
+
+    if "classifiers" in fields:
+        res["classifiers"] = await asyncio.get_event_loop().run_in_executor(
+            executor, get_classify, isbn
         )
 
     return res

@@ -125,6 +125,7 @@ async def make_app():
             web.get(api_id + "isbns/{isbn}/info", rest.info),
             web.get(api_id + "isbns/{isbn}/mask", rest.mask),
             web.get(api_id + "isbns/{isbn}/description", rest.description),
+            web.get(api_id + "isbns/{isbn}/classifiers", rest.classify),
             web.get(api_id + "isbns/{isbn}/cover", rest.cover),
             web.get(api_id + "isbns/{isbn}/editions", rest.editions),
             web.get(api_id + "providers", rest.providers),
