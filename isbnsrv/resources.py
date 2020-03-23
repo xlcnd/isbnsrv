@@ -115,8 +115,8 @@ def get_doi(isbn):
     return isbnlib.doi(isbn)
 
 
-# def get_classify(isbn):
-#    return isbnlib.classify(isbn)
+def get_classify(isbn):
+    return isbnlib.classify(isbn)
 
 
 def get_goom(search_terms):

@@ -3,12 +3,11 @@
 import asyncio
 import logging
 
-# from aiohttp import web
 from graphene import Field, List, ObjectType, String, Schema
 
 from .. import executor
 from ..resources import (
-    # get_classify,
+    get_classify,
     get_cover,
     get_description,
     get_doi,
@@ -84,14 +83,16 @@ class Query(ObjectType):
             return covers
 
         async def get_identifiers(isbn):
-            # classifiers = await asyncio.get_event_loop().run_in_executor(executor, get_classify, isbn)
-            classifiers = {
-                "owi": "3374702141",
-                "oclc": "488613559",
-                "lcc": "DF229.T5",
-                "ddc": "938.05",
-                "fast": {"1000": "dummydummy", "1100": "dummy"},
-            }
+            classifiers = await asyncio.get_event_loop().run_in_executor(
+                executor, get_classify, isbn
+            )
+            #            classifiers = {
+            #                "owi": "3374702141",
+            #                "oclc": "488613559",
+            #                "lcc": "DF229.T5",
+            #                "ddc": "938.05",
+            #                "fast": {"1000": "dummydummy", "1100": "dummy"},
+            #            }
             fast = classifiers.get("fast", {})
             if fast:
                 fast = [FAST(numeric_id=k, class_text=fast[k]) for k in fast]

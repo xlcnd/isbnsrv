@@ -74,12 +74,12 @@ async def test_api(aiohttp_client):
     resp = await client.get("/api/v1/isbns/9780192821911/cover")
     assert resp.status == 200
     text = await resp.text()
-    assert "id=CSZFAQAAIAAJ" in text
+    assert "id=tbBGHzIr43sC" in text
 
     resp = await client.get("/api/v1/isbns/9780192821911?fields=cover")
     assert resp.status == 200
     text = await resp.text()
-    assert "id=CSZFAQAAIAAJ" in text
+    assert "id=tbBGHzIr43sC" in text
 
     resp = await client.get("/api/v1/isbns/9780192821911/editions")
     assert resp.status == 200
