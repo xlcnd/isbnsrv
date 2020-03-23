@@ -86,13 +86,6 @@ class Query(ObjectType):
             classifiers = await asyncio.get_event_loop().run_in_executor(
                 executor, get_classify, isbn
             )
-            #            classifiers = {
-            #                "owi": "3374702141",
-            #                "oclc": "488613559",
-            #                "lcc": "DF229.T5",
-            #                "ddc": "938.05",
-            #                "fast": {"1000": "dummydummy", "1100": "dummy"},
-            #            }
             fast = classifiers.get("fast", {})
             if fast:
                 fast = [FAST(numeric_id=k, class_text=fast[k]) for k in fast]
