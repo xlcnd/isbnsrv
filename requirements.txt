@@ -3,5 +3,5 @@ aiodns==2.0.0
 cchardet==2.1.5
 graphene==2.1.8
 isbnlib==3.10.0
-isbnlib-porbase==0.1.2
-isbnlib-bnf==0.0.2
+isbnlib-porbase==1.0.0
+isbnlib-bnf==1.0.0
