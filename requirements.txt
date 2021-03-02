@@ -1,4 +1,4 @@
-aiohttp==3.6.2
+aiohttp==3.7.4
 aiodns==2.0.0
 cchardet==2.1.5
 graphene==2.1.8
