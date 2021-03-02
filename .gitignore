@@ -33,7 +33,9 @@ LAB_*
 *LAB*
 CHECKLIST
 TODO
-*release*
+*.release*
+release.log
+release.cfg
 .virtualenv
 *yop*
 Makefile
