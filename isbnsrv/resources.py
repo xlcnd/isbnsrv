@@ -5,6 +5,11 @@ import isbnlib
 from isbnlib.registry import PROVIDERS, metadata_cache as cache
 from . import executor
 
+# TODO (evaluate best option)
+# No threads in isbnlib?!
+# from isbnlib.config import set_option
+# set_option('VIAS_MERGE', 'serial')
+
 FIELDS = (
     "isbn13",
     "isbn10",
