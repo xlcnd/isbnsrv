@@ -10,7 +10,7 @@ keywords = ['isbnlib', 'microservice', 'rest', 'graphql']
 
 [tool.poetry.dependencies]
 python = "^3.6"
-aiohttp = "^3.5"
+aiohttp = "^3.6"
 cchardet = "^2.1"
 aiodns = "^2.0"
 isbnlib = "^3.10"
