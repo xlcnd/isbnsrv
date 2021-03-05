@@ -5,3 +5,6 @@ graphene==2.1.8
 isbnlib==3.10.6
 isbnlib-porbase==1.0.0
 isbnlib-bnf==1.0.0
+isbnlib-sbn==0.0.1
+isbnlib-mcues==0.0.3
+isbnlib-dnb==0.0.4
