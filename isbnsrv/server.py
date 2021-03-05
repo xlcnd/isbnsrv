@@ -31,7 +31,7 @@ async def version(request):
 async def preflight_middleware(request, handler):
     """Preflight request support for apollo-client.
 
-       https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
+    https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
     """
     if request.method.upper() == "OPTIONS":
         headers = request.headers
@@ -81,7 +81,7 @@ async def cache_middleware(request, handler):
         return original_response
     except Exception as exc:
         logger.info("Error in async cache - %r", exc, exc_info=True)
-        raise web.HTTPInternalServerError(reason=f"Internal server error!") from None
+        raise web.HTTPInternalServerError(reason="Internal server error!") from None
 
 
 @web.middleware
