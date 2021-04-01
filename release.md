@@ -13,3 +13,4 @@ $ docker run -d -p 8080:8080 isbnsrv:1.1.5
 ## What's new?
 
 1. Fix documentation!
+2. New providers: `sbn` (italian books), `mcues` (spanish books) and `dnb` (german books).
