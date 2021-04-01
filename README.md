@@ -3,8 +3,7 @@
 
 
 
-To try it, you need to install Docker in your system and download and unzip the [file][1].
-Then enter in a terminal (inside directory `isbnsrv-1.1.5`):
+To try it (select [master branch above][2]), you need to install Docker in your system and download and unzip the [file][1]. Then enter in a terminal (inside directory `isbnsrv-1.1.5`):
 
 ```
 $ docker build --tag="isbnsrv:1.1.5" .
@@ -43,12 +42,9 @@ http://localhost:8080/api/v1/isbns/9780375869020?fields=metadata,openl
 http://localhost:8080/api/v1/isbns/9780375869020?fields=isbn13,isbn10,mask,metadata,description
 ```
 
-If you don't indicate any field (like in the first example above) all fields are
-considered and the response is very slow. You should be very specific and
-**choose the fields that you need**.
+If you don't indicate any field (like in the first example above) all fields are considered and the response is very slow. You should be very specific and **choose the fields that you need**.
 
-Bags are slow with fields `editions`, `cover`, `classifiers`, `metadata` or `description` and fast with fields
-`isbn10`, `isbn13`, `mask` or `info`.
+Bags are slow with fields `editions`, `cover`, `classifiers`, `metadata` or `description` and fast with fields `isbn10`, `isbn13`, `mask` or `info`.
 
 
 Warning
@@ -66,5 +62,4 @@ New
 
 
 [1]: https://github.com/xlcnd/isbnsrv/archive/v1.1.5.zip
-
-
+[2]: https://github.com/xlcnd/isbnsrv/tree/master
