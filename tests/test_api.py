@@ -104,7 +104,7 @@ async def test_api(aiohttp_client):
     resp = await client.get("/api/v1/version")
     assert resp.status == 200
     text = await resp.text()
-    assert '{"version": "isbnsrv/1.1.5"}' == text
+    assert '{"version": "isbnsrv/1.1.6"}' == text
 
     resp = await client.get("/api/v1/isbns/978014044039")
     assert resp.status == 404
@@ -139,7 +139,8 @@ async def test_graphql(aiohttp_client):
     client = await aiohttp_client(app)
 
     resp = await client.post(
-        "/graphql", json={"query": "query Providers { metadataDublinCoreProviders { name } }"}
+        "/graphql",
+        json={"query": "query Providers { metadataDublinCoreProviders { name } }"},
     )
     assert resp.status == 200
     text = await resp.text()

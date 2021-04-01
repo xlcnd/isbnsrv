@@ -75,7 +75,9 @@ async def cache_middleware(request, handler):
         headers = dict(original_response.headers)
         del headers["Content-Type"]
         data = dict(
-            status=original_response.status, headers=headers, body=original_response.body
+            status=original_response.status,
+            headers=headers,
+            body=original_response.body,
         )
         await cache.set(key, data)
         return original_response
@@ -98,7 +100,10 @@ async def error_middleware(request, handler):
         message = exc.reason
         if status == 404:
             logger.info(
-                "(%s) HTTPException in error_middleware - %s", status, message, exc_info=True
+                "(%s) HTTPException in error_middleware - %s",
+                status,
+                message,
+                exc_info=True,
             )
         else:
             logger.info("(%s) HTTPException in error_middleware - %s", status, message)

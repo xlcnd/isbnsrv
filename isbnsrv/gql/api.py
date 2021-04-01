@@ -40,7 +40,9 @@ class Query(ObjectType):
     search = Field(List(MetadataDublinCore), search_terms=String(required=True))
     full_isbn = Field(ISBN, isbn=String(required=True))
     metadata_dublin_core = Field(
-        MetadataDublinCore, isbn=String(required=True), provider=String(default_value="goob")
+        MetadataDublinCore,
+        isbn=String(required=True),
+        provider=String(default_value="goob"),
     )
     metadata_extra = Field(MetadataExtra, isbn=String(required=True))
     metadata_dublin_core_providers = List(MetadataDublinCoreProvider)
