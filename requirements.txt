@@ -1,10 +1,10 @@
-aiohttp==3.7.4
 aiodns==2.0.0
-cchardet==2.1.5
+aiohttp==3.7.4.post0
+cchardet==2.1.7
 graphene==2.1.8
 isbnlib==3.10.6
-isbnlib-porbase==1.0.0
-isbnlib-bnf==1.0.0
-isbnlib-sbn==0.0.1
-isbnlib-mcues==0.0.3
+isbnlib-bnf==1.0.1
 isbnlib-dnb==0.0.4
+isbnlib-mcues==0.0.3
+isbnlib-porbase==1.0.1
+isbnlib-sbn==0.0.1
