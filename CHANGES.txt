@@ -4,4 +4,4 @@ v1.1.0, 2020-02-17 -- More optimized image.
 v1.1.1, 2021-03-02 -- Faster bags and new versions for aiohttp and isbnlib.
 v1.1.2, 2021-04-01 -- New providers: 'sbn' (italian books), 'mcues' (spanish books) and 'dnb' (german books).
 v1.1.3, 2021-04-01 -- Fix links!
-v1.1.4, 2021-04-01 -- TENTATIVE
+v1.1.4, 2021-04-01 -- Fix version!
