@@ -4,11 +4,11 @@
 
 
 To try it, you need to install Docker in your system and download and unzip the [file][1].
-Then enter in a terminal (inside directory `isbnsrv-1.1.3`):
+Then enter in a terminal (inside directory `isbnsrv-1.1.4`):
 
 ```
-$ docker build --tag="isbnsrv:1.1.3" .
-$ docker run -d -p 8080:8080 isbnsrv:1.1.3
+$ docker build --tag="isbnsrv:1.1.4" .
+$ docker run -d -p 8080:8080 isbnsrv:1.1.4
 ```
 
 (it exposes port 8080).
@@ -65,6 +65,6 @@ New
 >Now is available a graphql api at `http://localhost:8080/graphql`.
 
 
-[1]: https://github.com/xlcnd/isbnsrv/archive/v1.1.3.zip
+[1]: https://github.com/xlcnd/isbnsrv/archive/v1.1.4.zip
 
 
