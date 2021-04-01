@@ -2,4 +2,4 @@ v0.0.1, 2019-05-05 -- Pre-ALPHA (minimum viable product).
 v1.0.0, 2020-01-29 -- First stable eversion.
 v1.1.0, 2020-02-17 -- More optimized image.
 v1.1.1, 2021-03-02 -- Faster bags and new versions for aiohttp and isbnlib.
-v1.1.2, 2021-03-02 -- New providers: 'sbn' (italian books), 'mcues' (spanish books) and 'dnb' (german books).
+v1.1.2, 2021-04-01 -- New providers: 'sbn' (italian books), 'mcues' (spanish books) and 'dnb' (german books).
