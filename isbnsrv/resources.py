@@ -26,7 +26,7 @@ FIELDS = (
 async def bag(isbn, fields=FIELDS):
     """Get all fields (bag) for a given ISBN.
 
-       'fields' acts like a filter.
+    'fields' acts like a filter.
     """
     res = {}
 

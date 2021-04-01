@@ -48,5 +48,7 @@ DOCKER*
 poetry.lock
 .venv/
 .pre-commit-config.yaml
+.gitignore
 *tasks*
 *NOTES*
+requirements*.in
