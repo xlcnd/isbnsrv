@@ -12,4 +12,4 @@ $ docker run -d -p 8080:8080 isbnsrv:1.1.5
 
 ## What's new?
 
-1. TENTATIVE...
+1. Fix documentation!
