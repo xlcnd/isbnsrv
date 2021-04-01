@@ -23,6 +23,7 @@ flake8 = "^3.8"
 pre-commit = "^2.10"
 radon = "^4.3"
 invoke = "^1.5"
+codespell = "^2.0.0"
 
 [tool.black]
 line-length = 95
