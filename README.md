@@ -62,7 +62,7 @@ Warning
 New
 ---
 
->Now is available a graphql api at `http://localhost:8080/graphql`.
+>Is available a graphql api at `http://localhost:8080/graphql`.
 
 
 [1]: https://github.com/xlcnd/isbnsrv/archive/v1.1.5.zip
