@@ -1,7 +1,0 @@
-[flake8]
-max-line-length = 95
-select = C,E,F,W,B,B950
-ignore=D105,D107,N806,I100,I101,I201,N802,C812,C901,E722,E741,E501,W503
-exclude=*/test/*
-max-complexity=10
-
