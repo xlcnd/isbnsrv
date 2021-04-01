@@ -1,5 +1,5 @@
 New
 ---
 
->Is available a graphql api at `http://localhost:8080/graphql`.
->Are available new providers, namely: `sbn`, `mcues` and `dnb`.
+1. New providers: 'sbn' (italian books), 'mcues' (spanish books) and 'dnb' (german books).
+2. Updated dependencies.
