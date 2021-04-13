@@ -3,7 +3,7 @@
 
 
 
-To try it, first install and run [the latest release](https://github.com/xlcnd/isbnsrv/releases/tag/v1.1.5).
+To try it, first install and run [the latest release](https://github.com/xlcnd/isbnsrv/releases/tag/v1.1.6).
 
 
 Now in your browser go to:<a name="doccontinue"></a>
