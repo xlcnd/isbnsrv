@@ -12,4 +12,4 @@ $ docker run -d -p 8080:8080 isbnsrv:1.1.6
 
 ## What's new?
 
-1. TENTATIVE...
+1. Faster 'bags' with isbnlib-3.10.7.
